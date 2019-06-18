@@ -15,7 +15,7 @@ teachertian@linux ~ » pip3 list | grep splinter
 splinter                      0.10.0
 ```
 
-For other version of chrome, download the corresponding version of chromedriver at [here](http://chromedriver.chromium.org/downloads)
+For other versions of chrome, download the corresponding version of chromedriver at [here](http://chromedriver.chromium.org/downloads)
 
 ## usage
 
