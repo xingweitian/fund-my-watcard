@@ -6,13 +6,14 @@ with open("requirements.txt") as f:
 long_description = "A tool to fund your WatCard in an easy way"
 try:
     import pypandoc
+
     long_description = pypandoc.convert("README.md", "rst")
 except ImportError:
     pass
 
 setup(
     name="fund-my-watcard",
-    version="0.1",
+    version="0.1.1",
     packages=find_packages(),
     scripts=["fund-my-watcard/watcard"],
     install_requires=requirements,
@@ -26,6 +27,6 @@ setup(
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-        "Programming Language :: Python :: 3.6"
-    ]
+        "Programming Language :: Python :: 3.6",
+    ],
 )
