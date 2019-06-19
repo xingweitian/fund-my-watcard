@@ -1,0 +1,6 @@
+-r test-requirements.txt
+
+pypandoc
+twine
+wheel
+pre-commit
