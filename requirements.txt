@@ -1,0 +1,5 @@
+EasyProcess==0.2.7
+PyVirtualDisplay==0.2.3
+selenium==3.141.0
+splinter==0.10.0
+urllib3==1.25.3
