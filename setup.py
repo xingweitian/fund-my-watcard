@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="FundMyWatCard",
+    name="fund-my-watcard",
     version="0.1",
     packages=find_packages(),
-    scripts=['fundmywatcard/watcard'],
+    scripts=['fund-my-watcard/watcard'],
     install_requires=['EasyProcess==0.2.7',
                       'PyVirtualDisplay==0.2.3',
                       'selenium==3.141.0',
