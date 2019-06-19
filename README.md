@@ -10,7 +10,26 @@ pip install fund-my-watcard
 
 ## usage
 
+First, set the path to your chromedriver as environment variable:
+
 ```bash
+export CHROMEDRIVER="xxx/yyy/zzz/chromedriver"
+```
+
+Check if the path of chromedriver is correct:
+
+```bash
+env | grep CHROMEDRIVER
+```
+
+Find and download the corresponding versions of your chrome at [here](http://chromedriver.chromium.org/downloads)
+
+Then, try the following commands:
+
+```bash
+# see the help of watcard
+watcard --help
+
 # gengerate the config file
 watcard --config
 
