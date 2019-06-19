@@ -39,6 +39,6 @@ watcard --fund 10
 
 ## plan
 
-- Docker support
+- Tests
 - Check the balance and fund automatically
 - More robust
