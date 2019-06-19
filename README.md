@@ -1,6 +1,6 @@
 # fund-my-watcard
 
-This is a convenient tool to fund the watcard. I am too lazy to fund it by hand, so I write this tool.
+This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
 ## install package
 
@@ -37,8 +37,8 @@ watcard --config
 watcard --fund 10
 ```
 
-## TODO
+## plan
 
 - Docker support
-- Check the balance automatically
+- Check the balance and fund automatically
 - More robust
