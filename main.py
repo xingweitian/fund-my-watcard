@@ -1,6 +1,10 @@
 from splinter import Browser
 import time
 import json
+from pyvirtualdisplay import Display
+
+display = Display(visible=0)
+display.start()
 
 config = dict()
 
