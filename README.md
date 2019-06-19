@@ -1,5 +1,7 @@
 # fund-my-watcard
 
+![PyPI](https://img.shields.io/pypi/v/fund-my-watcard.svg)
+
 This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
 ## install package
