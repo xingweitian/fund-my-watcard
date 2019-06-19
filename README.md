@@ -23,7 +23,7 @@ splinter         0.10.0
 urllib3          1.25.3 
 ```
 
-For other version of chrome, download the corresponding version chromedriver at [here](http://chromedriver.chromium.org/downloads)
+For other versions of chrome, download the corresponding version of chromedriver at [here](http://chromedriver.chromium.org/downloads)
 
 ## usage
 
