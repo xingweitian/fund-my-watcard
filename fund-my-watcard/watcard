@@ -114,18 +114,15 @@ if args.config:
 
 if args.fund:
     amount = round(args.fund, 2)
-    config = dict()
     if os.path.isfile("watcard.json"):
         with open("watcard.json") as f:
             _config = json.load(f)
-            for k, v in _config.items():
-                config[k] = v
-        _my_wat_card = MyWatCard(**config)
+        _my_wat_card = MyWatCard(**_config)
         res = _my_wat_card.add_fund(amount)
         if res:
-            print("Adding ${} to account {} successfully.".format(amount, config["userName"]))
+            print("Adding ${} to account {} successfully.".format(amount, _config["userName"]))
         else:
-            print("Adding ${} to account {} failed.".format(amount, config["userName"]))
+            print("Adding ${} to account {} failed.".format(amount, _config["userName"]))
     else:
         raise NoConfigFileException()
 
