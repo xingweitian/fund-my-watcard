@@ -1,0 +1,5 @@
+-r test-requirements.txt
+
+pypandoc
+twine
+wheel
