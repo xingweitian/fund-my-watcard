@@ -4,8 +4,7 @@
 
 This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
-## install package
-
+## installation
 ```bash
 pip install fund-my-watcard
 ```
@@ -38,6 +37,10 @@ watcard --config
 # fund your WatCard with $10
 watcard --fund 10
 ```
+
+## contribution
+
+Please install `dev-requirements.txt` instead of `requirements.txt`, after that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
 
 ## plan
 
