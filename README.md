@@ -38,7 +38,7 @@ watcard --config
 watcard --fund 10
 ```
 
-## contribution
+## contributing
 
 Please install `dev-requirements.txt` instead of `requirements.txt`, after that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
 
