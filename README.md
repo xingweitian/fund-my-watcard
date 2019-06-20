@@ -4,7 +4,10 @@
 
 This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
+For now, it is only tested in __Ubuntu18.04__ with __Python3.6__.
+
 ## installation
+
 ```bash
 pip install fund-my-watcard
 ```
@@ -14,7 +17,7 @@ pip install fund-my-watcard
 First, set the path to your chromedriver as environment variable:
 
 ```bash
-export CHROMEDRIVER="xxx/yyy/zzz/chromedriver"
+export CHROMEDRIVER="/path/to/chromedriver"
 ```
 
 Check if the path of chromedriver is correct:
