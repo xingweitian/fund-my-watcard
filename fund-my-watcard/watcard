@@ -15,17 +15,17 @@ def generate_config_file():
         "ordName": "Name on the credit card",
         "phoneNumber": "Phone number",
         "address1": "Home address 1",
-        "address2": "Home address 2",
+        "address2": "Home address 2 (Remove all the characters if no address2)",
         "ordPostalCode": "Postal code",
         "ordCity": "City",
         "ordEmailAddress": "Email address",
-        "paymentMethod": "The payment method",
+        "paymentMethod": "The payment method ('CC' for 'Credit Card')",
         "trnCardOwner": "Card owner",
-        "trnCardType": "Card type",
+        "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card')",
         "trnCardNumber": "Card number",
         "trnExpMonth": "Expire month",
         "trnExpYear": "Expire year",
-        "trnCardCvd": "Card CVD"
+        "trnCardCvd": "Card CVD (3 digits in the back of the card)"
     }
     with open("watcard.json", "w+") as json_file:
         json.dump(_config_info, json_file, indent=2)
