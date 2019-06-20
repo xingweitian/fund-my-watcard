@@ -5,11 +5,7 @@ import json
 import os
 import time
 
-from pyvirtualdisplay import Display
 from splinter import Browser
-
-display = Display(visible=0)
-display.start()
 
 
 def generate_config_file():
@@ -59,7 +55,8 @@ class MyWatCard:
 
     def add_fund(self, amount):
         try:
-            with Browser("chrome", **{"executable_path": os.environ["CHROMEDRIVER"]}, incognito=True) as browser:
+            with Browser("chrome", **{"executable_path": os.environ["CHROMEDRIVER"]}, incognito=True,
+                         headless=True) as browser:
                 browser.visit("https://watcard.uwaterloo.ca/OneWebUW/addfunds_watiam.asp")
                 browser.fill("UserName", self.userName)
                 browser.fill("Password", self.password)
