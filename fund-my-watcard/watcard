@@ -6,6 +6,7 @@ import os
 import time
 
 from splinter import Browser
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 def generate_config_file():
@@ -30,7 +31,7 @@ def generate_config_file():
     with open("watcard.json", "w+") as json_file:
         json.dump(_config_info, json_file, indent=2)
     assert os.path.isfile("watcard.json") is True
-    print("Generate config file successfully. Please fill your information in watcard.json")
+    print("[fund-my-watcard] Generate config file successfully. Please fill your information in watcard.json")
 
 
 class MyWatCard:
@@ -55,7 +56,7 @@ class MyWatCard:
 
     def add_fund(self, amount):
         try:
-            with Browser("chrome", **{"executable_path": os.environ["CHROMEDRIVER"]}, incognito=True,
+            with Browser("chrome", **{"executable_path": ChromeDriverManager().install()}, incognito=True,
                          headless=True) as browser:
                 browser.visit("https://watcard.uwaterloo.ca/OneWebUW/addfunds_watiam.asp")
                 browser.fill("UserName", self.userName)
@@ -95,7 +96,7 @@ class MyWatCard:
 class NoConfigFileException(Exception):
     """Raised when watcard.json is not found."""
 
-    def __init__(self, message="Cannot find watcard.json, run 'watcard --config' at first."):
+    def __init__(self, message="[fund-my-watcard] Cannot find watcard.json, try 'watcard --config'."):
         super(NoConfigFileException, self).__init__(message)
         self.message = message
 
@@ -104,6 +105,7 @@ parser = argparse.ArgumentParser(description="Fund my WatCard: A tool to fund Wa
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-c", "--config", help="generate the config file", action="store_true")
 group.add_argument("-f", "--fund", type=float, help="the fund amount to the WatCard", action="store")
+group.add_argument("-v", "--version", help="show the version of fund-my-watcard", action="store_true")
 args = parser.parse_args()
 
 if args.config:
@@ -117,11 +119,14 @@ if args.fund:
         _my_wat_card = MyWatCard(**_config)
         res = _my_wat_card.add_fund(amount)
         if res:
-            print("Adding ${} to account {} successfully.".format(amount, _config["userName"]))
+            print("[fund-my-watcard] Adding ${} to account {} successfully.".format(amount, _config["userName"]))
         else:
-            print("Adding ${} to account {} failed.".format(amount, _config["userName"]))
+            print("[fund-my-watcard] Adding ${} to account {} failed.".format(amount, _config["userName"]))
     else:
         raise NoConfigFileException()
 
-if not args.config and not args.fund:
-    args = parser.parse_args(["-h"])
+if args.version:
+    print("fund-my-watcard v0.1.2")
+
+if not args.config and not args.fund and not args.version:
+    parser.parse_args(["-h"])

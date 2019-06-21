@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name="fund-my-watcard",
-    version="0.1.1",
+    version="0.1.2",
     packages=find_packages(),
     scripts=["fund-my-watcard/watcard"],
     install_requires=requirements,
@@ -25,8 +25,9 @@ setup(
     keywords="WatCard",
     url="https://github.com/xingweitian/fund-my-watcard",
     classifiers=[
-        "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
     ],
 )
