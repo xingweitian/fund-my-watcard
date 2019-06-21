@@ -1,6 +1,8 @@
 # fund-my-watcard
 
-[![Build Status](https://travis-ci.org/xingweitian/fund-my-watcard.svg?branch=master)](https://travis-ci.org/xingweitian/fund-my-watcard) ![PyPI](https://img.shields.io/pypi/v/fund-my-watcard.svg) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fund-my-watcard.svg)
+[![Build Status](https://travis-ci.org/xingweitian/fund-my-watcard.svg?branch=master)](https://travis-ci.org/xingweitian/fund-my-watcard)
+[![PyPI](https://img.shields.io/pypi/v/fund-my-watcard.svg)](https://pypi.org/project/fund-my-watcard)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fund-my-watcard.svg)](https://pypi.org/project/fund-my-watcard)
 
 This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
