@@ -13,8 +13,9 @@ except ImportError:
 
 setup(
     name="fund-my-watcard",
-    version="0.1.2",
+    version="0.1.3",
     packages=find_packages(),
+    python_requires=">=3.4",
     scripts=["fund-my-watcard/watcard"],
     install_requires=requirements,
     author="xingweitian",
@@ -29,5 +30,6 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
     ],
 )
