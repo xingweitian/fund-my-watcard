@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name="fund-my-watcard",
-    version="0.1.2",
+    version="0.1.3",
     packages=find_packages(),
     scripts=["fund-my-watcard/watcard"],
     install_requires=requirements,

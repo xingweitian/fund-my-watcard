@@ -8,8 +8,16 @@ import time
 from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 
+CONFIG_FILE_PATH = os.path.expanduser("~") + "/.watcard_config"
+PRINT_PREFIX = "[fund-my-watcard] "
+
 
 def generate_config_file():
+    if os.path.isfile(CONFIG_FILE_PATH):
+        print(PRINT_PREFIX + "Config file '.watcard_config' has already exists.")
+        print(PRINT_PREFIX + "Opening " + CONFIG_FILE_PATH)
+        os.system("vim {}".format(CONFIG_FILE_PATH))
+        return
     _config_info = {
         "userName": "User name of WatIM",
         "password": "Password of WatIM",
@@ -28,10 +36,12 @@ def generate_config_file():
         "trnExpYear": "Expire year",
         "trnCardCvd": "Card CVD (3 digits in the back of the card)"
     }
-    with open("watcard.json", "w+") as json_file:
+    with open(CONFIG_FILE_PATH, "w+") as json_file:
         json.dump(_config_info, json_file, indent=2)
-    assert os.path.isfile("watcard.json") is True
-    print("[fund-my-watcard] Generate config file successfully. Please fill your information in watcard.json")
+    assert os.path.isfile(CONFIG_FILE_PATH) is True
+    print(PRINT_PREFIX + "Generate config file at user directory successfully. Please fill your information.")
+    print(PRINT_PREFIX + "Opening " + CONFIG_FILE_PATH)
+    os.system("vim {}".format(CONFIG_FILE_PATH))
 
 
 class MyWatCard:
@@ -96,7 +106,8 @@ class MyWatCard:
 class NoConfigFileException(Exception):
     """Raised when watcard.json is not found."""
 
-    def __init__(self, message="[fund-my-watcard] Cannot find watcard.json, try 'watcard --config'."):
+    def __init__(self,
+                 message=PRINT_PREFIX + "Cannot find config file under user directory, try 'watcard --config'."):
         super(NoConfigFileException, self).__init__(message)
         self.message = message
 
@@ -113,20 +124,20 @@ if args.config:
 
 if args.fund:
     amount = round(args.fund, 2)
-    if os.path.isfile("watcard.json"):
-        with open("watcard.json") as f:
+    if os.path.isfile(CONFIG_FILE_PATH):
+        with open(CONFIG_FILE_PATH) as f:
             _config = json.load(f)
         _my_wat_card = MyWatCard(**_config)
         res = _my_wat_card.add_fund(amount)
         if res:
-            print("[fund-my-watcard] Adding ${} to account {} successfully.".format(amount, _config["userName"]))
+            print(PRINT_PREFIX + "Adding ${} to account {} successfully.".format(amount, _config["userName"]))
         else:
-            print("[fund-my-watcard] Adding ${} to account {} failed.".format(amount, _config["userName"]))
+            print(PRINT_PREFIX + "Adding ${} to account {} failed.".format(amount, _config["userName"]))
     else:
         raise NoConfigFileException()
 
 if args.version:
-    print("fund-my-watcard v0.1.2")
+    print("fund-my-watcard v0.1.3")
 
 if not args.config and not args.fund and not args.version:
     parser.parse_args(["-h"])
