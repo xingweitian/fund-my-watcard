@@ -4,8 +4,6 @@
 
 This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
-For now, it is only tested in __Ubuntu18.04__ with __Python3.6__.
-
 ## installation
 
 ```bash
@@ -14,31 +12,18 @@ pip install fund-my-watcard
 
 ## usage
 
-First, set the path to your chromedriver as environment variable:
-
 ```bash
-export CHROMEDRIVER="/path/to/chromedriver"
-```
+teachertian@v1040-wn-rt-c-83-249 ~/PycharmProjects/fundmywatcard ±dev⚡ » watcard
+usage: watcard [-h] [-c | -f FUND | -v]
 
-Check if the path of chromedriver is correct:
+Fund my WatCard: A tool to fund WatCard easily.
 
-```bash
-env | grep CHROMEDRIVER
-```
+optional arguments:
+  -h, --help            show this help message and exit
+  -c, --config          generate the config file
+  -f FUND, --fund FUND  the fund amount to the WatCard
+  -v, --version         show the version of fund-my-watcard
 
-Find and download the corresponding versions of your chrome at [here](http://chromedriver.chromium.org/downloads)
-
-Then, try the following commands:
-
-```bash
-# see the help of watcard
-watcard --help
-
-# gengerate the config file
-watcard --config
-
-# fund your WatCard with $10
-watcard --fund 10
 ```
 
 ## contributing
