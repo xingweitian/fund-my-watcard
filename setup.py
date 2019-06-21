@@ -15,6 +15,7 @@ setup(
     name="fund-my-watcard",
     version="0.1.3",
     packages=find_packages(),
+    python_requires=">=3.4",
     scripts=["fund-my-watcard/watcard"],
     install_requires=requirements,
     author="xingweitian",
