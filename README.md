@@ -1,6 +1,6 @@
 # fund-my-watcard
 
-![PyPI](https://img.shields.io/pypi/v/fund-my-watcard.svg) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fund-my-watcard.svg)
+[![Build Status](https://travis-ci.org/xingweitian/fund-my-watcard.svg?branch=master)](https://travis-ci.org/xingweitian/fund-my-watcard) ![PyPI](https://img.shields.io/pypi/v/fund-my-watcard.svg) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fund-my-watcard.svg)
 
 This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
@@ -25,6 +25,10 @@ optional arguments:
   -v, --version         show the version of fund-my-watcard
 
 ```
+
+## contributing
+
+Please install `dev-requirements.txt` instead of `requirements.txt`, after that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
 
 ## plan
 
