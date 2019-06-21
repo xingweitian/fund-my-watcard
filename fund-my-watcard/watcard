@@ -104,7 +104,7 @@ class MyWatCard:
 
 
 class NoConfigFileException(Exception):
-    """Raised when watcard.json is not found."""
+    """Raised when config file is not found."""
 
     def __init__(self,
                  message=PRINT_PREFIX + "Cannot find config file under user directory, try 'watcard --config'."):
