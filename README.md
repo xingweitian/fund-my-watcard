@@ -4,7 +4,7 @@
 
 This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
-## install package
+## installation
 
 ```bash
 pip install fund-my-watcard
