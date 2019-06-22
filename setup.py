@@ -3,13 +3,8 @@ from setuptools import setup, find_packages
 with open("requirements.txt") as f:
     requirements = [_.strip() for _ in f.readlines() if _]
 
-long_description = "A tool to fund your WatCard in an easy way"
-try:
-    import pypandoc
-
-    long_description = pypandoc.convert("README.md", "rst")
-except ImportError:
-    pass
+with open("README.md", encoding="utf-8") as f:
+    long_description = f.read()
 
 setup(
     name="fund-my-watcard",
