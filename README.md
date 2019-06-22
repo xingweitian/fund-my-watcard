@@ -9,7 +9,7 @@ This is a convenient tool to fund your WatCard easily. I am too lazy to do it by
 ## installation
 
 ```bash
-pip install fund-my-watcard
+pip3 install fund-my-watcard
 ```
 
 ## usage
