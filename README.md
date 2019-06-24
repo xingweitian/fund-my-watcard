@@ -6,16 +6,16 @@
 
 This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
 
-## installation
+## Installation
 
 ```bash
 pip3 install fund-my-watcard
 ```
 
-## usage
+## Usage
 
 ```bash
-teachertian@v1040-wn-rt-c-83-249 ~/PycharmProjects/fundmywatcard ±dev⚡ » watcard
+teachertian@v1040-wn-rt-c-83-249 ~/PycharmProjects/fundmywatcard: watcard
 usage: watcard [-h] [-c | -f FUND | -v]
 
 Fund my WatCard: A tool to fund WatCard easily.
@@ -28,12 +28,40 @@ optional arguments:
 
 ```
 
-## contributing
+An example of **.watcard_config**:
 
-Please install `dev-requirements.txt` instead of `requirements.txt`, after that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
+```json
+{
+  "userName": "s123zhang",
+  "password": "1234567",
+  "ordName": "San Zhang",
+  "phoneNumber": "123 456 7890",
+  "address1": "123 Queen Street West",
+  "address2": "",
+  "ordPostalCode": "A1B2C3",
+  "ordCity": "Waterloo",
+  "ordEmailAddress": "zhangsan@gmail.com",
+  "paymentMethod": "CC",
+  "trnCardOwner": "San Zhang",
+  "trnCardType": "MC",
+  "trnCardNumber": "1234567890123456",
+  "trnExpMonth": "01",
+  "trnExpYear": "25",
+  "trnCardCvd": "123"
+}
+```
 
-## plan
+Payment Method should be "CC" (Credit Card). Do not support **Interac Online**.
+
+Card Type can be "MC" (Mastercard), "VI" (Visa), "PV" (VISA Debit), "MD" (Debit Mastercard) or "AM" (AMEX).
+
+## Contributing
+
+Please install `dev-requirements.txt` instead of `requirements.txt`. After that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
+
+## Plan
 
 - Tests
+- Docker
 - Check the balance and fund automatically
 - More robust
