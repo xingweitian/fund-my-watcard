@@ -8,3 +8,5 @@ python:
 install: "pip install -r test-requirements.txt"
 script:
   - flake8 .
+  - python setup.py install
+  - pytest
