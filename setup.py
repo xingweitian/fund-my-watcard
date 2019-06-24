@@ -21,6 +21,7 @@ setup(
     author="xingweitian",
     author_email="xingweitian@gmail.com",
     description="A tool to fund WatCard in an easy way",
+    long_description_content_type="text/markdown",
     long_description=long_description,
     license="GPL-3.0",
     keywords="WatCard",
