@@ -139,9 +139,9 @@ if args.fund:
         raise NoConfigFileException()
 
 if args.version:
-    with open("fund-my-watcard/config.json") as f:
-        config = json.load(f)
-    print("fund-my-watcard v{}".format(config["VERSION"]))
+    from fund_my_watcard.config import VERSION
+
+    print("fund-my-watcard v{}".format(VERSION))
 
 if not args.config and not args.fund and not args.version:
     parser.parse_args(["-h"])
