@@ -114,34 +114,33 @@ class NoConfigFileException(Exception):
         self.message = message
 
 
-parser = argparse.ArgumentParser(description="Fund my WatCard: A tool to fund WatCard easily.")
-group = parser.add_mutually_exclusive_group()
-group.add_argument("-c", "--config", help="generate the config file", action="store_true")
-group.add_argument("-f", "--fund", type=float, help="the fund amount to the WatCard", action="store")
-group.add_argument("-v", "--version", help="show the version of fund-my-watcard", action="store_true")
-args = parser.parse_args()
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Fund my WatCard: A tool to fund WatCard easily.")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-c", "--config", help="generate the config file", action="store_true")
+    group.add_argument("-f", "--fund", type=float, help="the fund amount to the WatCard", action="store")
+    group.add_argument("-v", "--version", help="show the version of fund-my-watcard", action="store_true")
+    args = parser.parse_args()
 
-if args.config:
-    generate_config_file()
+    if args.config:
+        generate_config_file()
 
-if args.fund:
-    amount = round(args.fund, 2)
-    if os.path.isfile(CONFIG_FILE_PATH):
-        with open(CONFIG_FILE_PATH) as f:
-            _config = json.load(f)
-        _my_wat_card = MyWatCard(**_config)
-        res = _my_wat_card.add_fund(amount)
-        if res:
-            print(PRINT_PREFIX + "Adding ${} to account {} successfully.".format(amount, _config["userName"]))
+    if args.fund:
+        amount = round(args.fund, 2)
+        if os.path.isfile(CONFIG_FILE_PATH):
+            with open(CONFIG_FILE_PATH) as f:
+                _config = json.load(f)
+            _my_wat_card = MyWatCard(**_config)
+            res = _my_wat_card.add_fund(amount)
+            if res:
+                print(PRINT_PREFIX + "Adding ${} to account {} successfully.".format(amount, _config["userName"]))
+            else:
+                print(PRINT_PREFIX + "Adding ${} to account {} failed.".format(amount, _config["userName"]))
         else:
-            print(PRINT_PREFIX + "Adding ${} to account {} failed.".format(amount, _config["userName"]))
-    else:
-        raise NoConfigFileException()
+            raise NoConfigFileException()
 
-if args.version:
-    from fund_my_watcard.config import VERSION
+    if args.version:
+        print("fund-my-watcard v{}".format("0.2.0"))
 
-    print("fund-my-watcard v{}".format(VERSION))
-
-if not args.config and not args.fund and not args.version:
-    parser.parse_args(["-h"])
+    if not args.config and not args.fund and not args.version:
+        parser.parse_args(["-h"])
