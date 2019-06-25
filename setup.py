@@ -17,6 +17,7 @@ setup(
     packages=find_packages(exclude=["tests"]),
     python_requires=">=3.5",
     scripts=["fund-my-watcard/watcard"],
+    data_files=["config.json"],
     install_requires=requirements,
     author="xingweitian",
     author_email="xingweitian@gmail.com",
