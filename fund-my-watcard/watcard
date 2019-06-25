@@ -139,7 +139,7 @@ if args.fund:
         raise NoConfigFileException()
 
 if args.version:
-    with open("config.json") as f:
+    with open("fund-my-watcard/config.json") as f:
         config = json.load(f)
     print("fund-my-watcard v{}".format(config["VERSION"]))
 

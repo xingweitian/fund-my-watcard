@@ -8,7 +8,7 @@ with open("requirements.txt") as f:
 with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
 
-with open("config.json") as f:
+with open("fund-my-watcard/config.json") as f:
     config = json.load(f)
 
 setup(
