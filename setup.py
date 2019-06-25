@@ -14,7 +14,7 @@ with open("config.json") as f:
 setup(
     name="fund-my-watcard",
     version=config["VERSION"],
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests"]),
     python_requires=">=3.5",
     scripts=["fund-my-watcard/watcard"],
     install_requires=requirements,
