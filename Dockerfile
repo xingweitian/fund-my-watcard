@@ -1,8 +1,7 @@
 # Base image to use, this must be set as the first line
 FROM ubuntu
 
-# Maintainer: docker_user <docker_user at email.com> (@docker_user)
-MAINTAINER faushine fyuxin@uwaterloo.ca
+LABEL maintainer="fyuxin@uwaterloo.ca"
 
 # Commands to update the image
 RUN apt-get update && apt-get install -y \
