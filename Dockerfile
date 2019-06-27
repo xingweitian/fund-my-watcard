@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     libssl-dev \
     openssl \
-    libffi-dev 
+    libffi-dev
 
 WORKDIR /usr/local/share/
 RUN wget -N http://chromedriver.storage.googleapis.com/2.26/chromedriver_linux64.zip \
