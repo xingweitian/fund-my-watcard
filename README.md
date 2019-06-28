@@ -61,7 +61,4 @@ Please install `dev-requirements.txt` instead of `requirements.txt`. After that,
 
 ## Plan
 
-- Tests
-- Docker
-- Check the balance and fund automatically
-- More robust
+Check [kanban board](https://github.com/xingweitian/fund-my-watcard/projects) to see our future plan.
