@@ -35,7 +35,7 @@ def generate_config_file():
         "trnCardNumber": "Card number",
         "trnExpMonth": "Expire month",
         "trnExpYear": "Expire year",
-        "trnCardCvd": "Card CVD (3 digits at the back of the card)"
+        "trnCardCvd": "Card CVD (3 digit numbers on the back of card)"
     }
     with open(CONFIG_FILE_PATH, "w+") as json_file:
         json.dump(_config_info, json_file, indent=2)
