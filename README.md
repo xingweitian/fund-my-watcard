@@ -28,32 +28,59 @@ optional arguments:
 
 ```
 
+One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initilize and edit the config file.
+
 An example of **.watcard_config**:
 
-```python
+```json
 {
-  "userName": "s123zhang", // User name of WatIM
-  "password": "1234567", // Password of WatIM
-  "ordName": "San Zhang", // Full name
-  "phoneNumber": "123 456 7890", // Phone number
-  "address1": "123 Queen Street West", // Home address 1
-  "address2": "", // Home address 2
-  "ordPostalCode": "A1B2C3", // Postal code
-  "ordCity": "Waterloo", // City
-  "ordEmailAddress": "zhangsan@gmail.com", // Email address
-  "paymentMethod": "CC", // Payment method
-  "trnCardOwner": "San Zhang", // Name on the card
-  "trnCardType": "MC", // Card type
-  "trnCardNumber": "1234567890123456", // Card number
-  "trnExpMonth": "01", // Expire month on the card
-  "trnExpYear": "25", // Expire year on the card
-  "trnCardCvd": "123" // Three digital numbers on the back of card
+  "userName": "User name of WatIM",
+  "password": "Password of WatIM",
+  "ordName": "Name on the credit card",
+  "phoneNumber": "Phone number",
+  "address1": "Home address 1",
+  "address2": "Home address 2 (Remove all the characters if no address2)",
+  "ordPostalCode": "Postal code",
+  "ordCity": "City",
+  "ordEmailAddress": "Email address",
+  "paymentMethod": "The payment method ('CC' for 'Credit Card')",
+  "trnCardOwner": "Card owner",
+  "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card')",
+  "trnCardNumber": "Card number",
+  "trnExpMonth": "Expire month",
+  "trnExpYear": "Expire year",
+  "trnCardCvd": "Card CVD (3 digit numbers on the back of card)"
 }
 ```
 
-Payment Method should be "CC" (Credit Card). Do not support **Interac Online**.
+An example of filled **.watcard_config**:
 
-Card Type can be "MC" (Mastercard), "VI" (Visa), "PV" (VISA Debit), "MD" (Debit Mastercard) or "AM" (AMEX).
+```json
+{
+  "userName": "s123zhang",
+  "password": "1234567",
+  "ordName": "San Zhang",
+  "phoneNumber": "123 456 7890",
+  "address1": "123 Queen Street West",
+  "address2": "",
+  "ordPostalCode": "A1B2C3",
+  "ordCity": "Waterloo",
+  "ordEmailAddress": "zhangsan@gmail.com",
+  "paymentMethod": "CC",
+  "trnCardOwner": "San Zhang",
+  "trnCardType": "MC",
+  "trnCardNumber": "1234567890123456",
+  "trnExpMonth": "01",
+  "trnExpYear": "25",
+  "trnCardCvd": "123"
+}
+```
+
+Payment Method should be **CC** (Credit Card). Do not support **Interac Online**.
+
+Card Type can be **MC** (Mastercard), **VI** (Visa), **PV** (VISA Debit), **MD** (Debit Mastercard) or **AM** (AMEX).
+
+After filling the config file, try `watcard --fund 10` to add 10 dollars to your account. At the next time, no need to edit config file (unless you want to change some infoamtion), just use `watcard --fund` to fund your watcard easily, cheers!
 
 ## Contributing
 
