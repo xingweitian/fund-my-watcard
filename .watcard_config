@@ -14,5 +14,5 @@
   "trnCardNumber": "Card number",
   "trnExpMonth": "Expire month",
   "trnExpYear": "Expire year",
-  "trnCardCvd": "Card CVD (3 digits at the back of the card)"
+  "trnCardCvd": "Card CVD (3 digit numbers on the back of card)"
 }
