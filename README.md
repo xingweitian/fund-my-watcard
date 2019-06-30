@@ -28,7 +28,32 @@ optional arguments:
 
 ```
 
+One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initilize and edit the config file.
+
 An example of **.watcard_config**:
+
+```json
+{
+  "userName": "User name of WatIM",
+  "password": "Password of WatIM",
+  "ordName": "Name on the credit card",
+  "phoneNumber": "Phone number",
+  "address1": "Home address 1",
+  "address2": "Home address 2 (Remove all the characters if no address2)",
+  "ordPostalCode": "Postal code",
+  "ordCity": "City",
+  "ordEmailAddress": "Email address",
+  "paymentMethod": "The payment method ('CC' for 'Credit Card')",
+  "trnCardOwner": "Card owner",
+  "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card')",
+  "trnCardNumber": "Card number",
+  "trnExpMonth": "Expire month",
+  "trnExpYear": "Expire year",
+  "trnCardCvd": "Card CVD (3 digit numbers on the back of card)"
+}
+```
+
+An example of filled **.watcard_config**:
 
 ```json
 {
@@ -51,9 +76,11 @@ An example of **.watcard_config**:
 }
 ```
 
-Payment Method should be "CC" (Credit Card). Do not support **Interac Online**.
+Payment Method should be **CC** (Credit Card). Do not support **Interac Online**.
 
-Card Type can be "MC" (Mastercard), "VI" (Visa), "PV" (VISA Debit), "MD" (Debit Mastercard) or "AM" (AMEX).
+Card Type can be **MC** (Mastercard), **VI** (Visa), **PV** (VISA Debit), **MD** (Debit Mastercard) or **AM** (AMEX).
+
+After filling the config file, try `watcard --fund 10` to add 10 dollars to your account. At the next time, no need to edit config file (unless you want to change some infoamtion), just use `watcard --fund` to fund your watcard easily, cheers!
 
 ## Contributing
 
@@ -61,7 +88,4 @@ Please install `dev-requirements.txt` instead of `requirements.txt`. After that,
 
 ## Plan
 
-- Tests
-- Docker
-- Check the balance and fund automatically
-- More robust
+Check [kanban board](https://github.com/xingweitian/fund-my-watcard/projects) to see our future plan.
