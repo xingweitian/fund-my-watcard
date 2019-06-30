@@ -4,43 +4,26 @@ FROM ubuntu
 # Maintainer: docker_user <docker_user at email.com> (@docker_user)
 MAINTAINER faushine fyuxin@uwaterloo.ca
 
-# Commands to update the image
-RUN apt-get update && apt-get install -y \
-    wget \
-    unzip \
-    libfontconfig \
-    libgconf2-4 \
-    libglib2.0-0 \
-    libnss3 \
-    libx11-6 \
-    build-essential \
-    python-dev \
-    python-setuptools \
-    python-pip \
-    python-smbus \
-    libncursesw5-dev \
-    libgdbm-dev \
-    libc6-dev \
-    zlib1g-dev \
-    libsqlite3-dev \
-    libssl-dev \
-    openssl \
-    libffi-dev 
+# Commands to install python
+RUN apt-get update \
+    && apt-get install -y python3-pip python3-dev vim curl apt-utils \
+    && cd /usr/local/bin \
+    && ln -s /usr/bin/python3 python \
+    && pip3 install --upgrade pip \
+    && pip install fund-my-watcard
 
-WORKDIR /usr/local/share/
-RUN wget -N http://chromedriver.storage.googleapis.com/2.26/chromedriver_linux64.zip \
-    && unzip chromedriver_linux64.zip \
-    && chmod +x chromedriver \
-    && ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver \
-    && ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
+# Commands to install Chrome and chromedriver
+RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /chrome.deb \
+    && dpkg -i /chrome.deb || apt-get install -yf \
+    && rm /chrome.deb \
+    && curl https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip -o /usr/local/bin/chromedriver \
+    && chmod +x /usr/local/bin/chromedriver
 
-WORKDIR /tmp/
-RUN wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0b3.tar.xz \
-    && tar xpvf Python-3.7.0b3.tar.xz \
-    && cd Python-3.7.0b3/ \
-    && ./configure --prefix /usr/local/ \
-    && make \
-    && make altinstall \
-    && ln -s /usr/local/bin/python3.7 /usr/bin/python37 \
-    && ln -s /usr/local/bin/pip3.7 /usr/bin/pip37 \
-    && pip3.7 install fund-my-watcard 
+# Commands to add source code to container for test
+# ADD ./ /usr/local/share/fund_my_watcard
+
+# Commands to add config file to container for test
+# ADD .watcard_config /root/.watcard_config
+
+# Commands to add config file to container
+ADD .watcard_config ~/.watcard_config
