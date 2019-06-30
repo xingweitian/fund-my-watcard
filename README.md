@@ -82,10 +82,15 @@ Card Type can be **MC** (Mastercard), **VI** (Visa), **PV** (VISA Debit), **MD**
 
 After filling the config file, try `watcard --fund 10` to add 10 dollars to your account. At the next time, no need to edit config file (unless you want to change some infoamtion), just use `watcard --fund` to fund your watcard easily, cheers!
 
+## Docker Hub
+https://cloud.docker.com/u/faushine/repository/docker/faushine/fund-my-watcard
+
 ## Contributing
 
 Please install `dev-requirements.txt` instead of `requirements.txt`. After that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
 
+
 ## Plan
 
 Check [kanban board](https://github.com/xingweitian/fund-my-watcard/projects) to see our future plan.
+
