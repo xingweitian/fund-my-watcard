@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/fund-my-watcard.svg)](https://pypi.org/project/fund-my-watcard)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fund-my-watcard.svg)](https://pypi.org/project/fund-my-watcard)
 
-This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
+This tool helps you add funds to your WatCard easily. I wrote this tool because I am too lazy to do it by hand everytime.
 
 ## Installation
 
@@ -28,14 +28,14 @@ optional arguments:
 
 ```
 
-One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initilize and edit the config file.
+One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initialize and edit the config file.
 
 An example of **.watcard_config**:
 
 ```json
 {
-  "userName": "User name of WatIM",
-  "password": "Password of WatIM",
+  "userName": "WatIAM username",
+  "password": "WatIAM username",
   "ordName": "Name on the credit card",
   "phoneNumber": "Phone number",
   "address1": "Home address 1",
@@ -45,11 +45,11 @@ An example of **.watcard_config**:
   "ordEmailAddress": "Email address",
   "paymentMethod": "The payment method ('CC' for 'Credit Card')",
   "trnCardOwner": "Card owner",
-  "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card')",
+  "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card', see more card types below)",
   "trnCardNumber": "Card number",
-  "trnExpMonth": "Expire month",
-  "trnExpYear": "Expire year",
-  "trnCardCvd": "Card CVD (3 digit numbers on the back of card)"
+  "trnExpMonth": "Expiry month",
+  "trnExpYear": "Expiry year",
+  "trnCardCvd": "Card CVD (3 digit number on the back of the card)"
 }
 ```
 
@@ -80,7 +80,7 @@ Payment Method should be **CC** (Credit Card). Do not support **Interac Online**
 
 Card Type can be **MC** (Mastercard), **VI** (Visa), **PV** (VISA Debit), **MD** (Debit Mastercard) or **AM** (AMEX).
 
-After filling the config file, try `watcard --fund 10` to add 10 dollars to your account. At the next time, no need to edit config file (unless you want to change some infoamtion), just use `watcard --fund` to fund your watcard easily, cheers!
+After filling the config file, try `watcard --fund 10` to add 10 dollars to your account. At the next time, no need to edit config file (unless you want to change some information), just use `watcard --fund` to fund your watcard easily, cheers!
 
 ## Contributing
 
