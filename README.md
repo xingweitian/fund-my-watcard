@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/fund-my-watcard.svg)](https://pypi.org/project/fund-my-watcard)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fund-my-watcard.svg)](https://pypi.org/project/fund-my-watcard)
 
-This is a convenient tool to fund your WatCard easily. I am too lazy to do it by my hand everytime, so I write this tool.
+This tool helps you add funds your WatCard easily. I wrote this tool because I am too lazy to do it by hand everytime.
 
 ## Installation
 
@@ -28,7 +28,7 @@ optional arguments:
 
 ```
 
-One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initilize and edit the config file.
+One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initialize and edit the config file.
 
 An example of **.watcard_config**:
 
@@ -80,7 +80,7 @@ Payment Method should be **CC** (Credit Card). Do not support **Interac Online**
 
 Card Type can be **MC** (Mastercard), **VI** (Visa), **PV** (VISA Debit), **MD** (Debit Mastercard) or **AM** (AMEX).
 
-After filling the config file, try `watcard --fund 10` to add 10 dollars to your account. At the next time, no need to edit config file (unless you want to change some infoamtion), just use `watcard --fund` to fund your watcard easily, cheers!
+After filling the config file, try `watcard --fund 10` to add 10 dollars to your account. At the next time, no need to edit config file (unless you want to change some information), just use `watcard --fund` to fund your watcard easily, cheers!
 
 ## Contributing
 
