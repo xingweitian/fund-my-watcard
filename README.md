@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/fund-my-watcard.svg)](https://pypi.org/project/fund-my-watcard)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/fund-my-watcard.svg)](https://pypi.org/project/fund-my-watcard)
 
-This tool helps you add funds your WatCard easily. I wrote this tool because I am too lazy to do it by hand everytime.
+This tool helps you add funds to your WatCard easily. I wrote this tool because I am too lazy to do it by hand everytime.
 
 ## Installation
 
