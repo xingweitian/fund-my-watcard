@@ -86,7 +86,7 @@ After filling the config file, try `watcard --fund 10` to add 10 dollars to your
 
 We also maintain a docker image for fund-my-watcard:
 
-https://cloud.docker.com/u/faushine/repository/docker/faushine/fund-my-watcard
+https://hub.docker.com/r/faushine/fund-my-watcard
 
 ## Contributing
 
