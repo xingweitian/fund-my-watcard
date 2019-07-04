@@ -115,10 +115,10 @@ class NoConfigFileException(Exception):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Fund my WatCard: A tool to fund WatCard easily.")
+    parser = argparse.ArgumentParser(description="Fund my WatCard: A tool to add funds to WatCard easily.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--config", help="generate the config file", action="store_true")
-    group.add_argument("-f", "--fund", type=float, help="the fund amount to the WatCard", action="store")
+    group.add_argument("-f", "--fund", type=float, help="the amount to add into the WatCard", action="store")
     group.add_argument("-v", "--version", help="show the version of fund-my-watcard", action="store_true")
     args = parser.parse_args()
 
