@@ -144,7 +144,7 @@ if __name__ == "__main__":
             raise NoConfigFileException()
 
     if args.version:
-        print("fund-my-watcard v{}".format("0.2.0"))
+        print("fund-my-watcard v{}".format("0.2.1"))
 
     if not args.config and not args.fund and not args.version:
         parser.parse_args(["-h"])
