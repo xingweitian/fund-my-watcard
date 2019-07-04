@@ -1,0 +1,18 @@
+{
+  "userName": "WatIAM username",
+  "password": "WatIAM username",
+  "ordName": "Name on the credit card",
+  "phoneNumber": "Phone number",
+  "address1": "Home address 1",
+  "address2": "Home address 2 (Remove all the characters if no address2)",
+  "ordPostalCode": "Postal code",
+  "ordCity": "City",
+  "ordEmailAddress": "Email address",
+  "paymentMethod": "The payment method ('CC' for 'Credit Card')",
+  "trnCardOwner": "Card owner",
+  "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card', see more card types below)",
+  "trnCardNumber": "Card number",
+  "trnExpMonth": "Expiry month",
+  "trnExpYear": "Expiry year",
+  "trnCardCvd": "Card CVD (3 digit number on the back of the card)"
+}
