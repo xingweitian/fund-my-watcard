@@ -14,5 +14,3 @@ RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
     && dpkg -i /chrome.deb || apt-get install -yf \
     && rm /chrome.deb
 
-# Commands to add config file to container
-COPY .watcard_config /root/.watcard_config
