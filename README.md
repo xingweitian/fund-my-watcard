@@ -91,7 +91,7 @@ https://hub.docker.com/r/faushine/fund-my-watcard
 Pull image from docker-hub: 
    
 ```bash
- docker push faushine/fund-my-watcard:0.2.1
+ docker pull faushine/fund-my-watcard:0.2.1
  ```
 
 Edit `.watcard_config` and save it. 
