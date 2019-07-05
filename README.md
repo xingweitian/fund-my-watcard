@@ -94,7 +94,7 @@ Pull image from docker-hub:
  docker pull faushine/fund-my-watcard:0.2.1
  ```
 
-Create `.watcard_config` and save it. 
+Create and edit `.watcard_config` (There is a template of `.watcard_config` in the folder `docker`, you may want to edit it directly). 
 
 Run container and mount configuration to the container:
    
