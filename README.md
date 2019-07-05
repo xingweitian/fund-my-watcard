@@ -88,6 +88,21 @@ We also maintain a docker image for fund-my-watcard:
 
 https://hub.docker.com/r/faushine/fund-my-watcard
 
+Pull image from docker-hub: 
+   
+```bash
+ docker push faushine/fund-my-watcard:0.2.1
+ ```
+
+Edit `.watcard_config` and save it. 
+
+Run container and mount configuration to the container:
+   
+```bash
+docker run -it  -v /absolute/path/of/.watcard_config:/root/.watcard_config faushine/fund-my-watcard:0.2.1
+```
+
+
 ## Contributing
 
 Please install `dev-requirements.txt` instead of `requirements.txt`. After that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
