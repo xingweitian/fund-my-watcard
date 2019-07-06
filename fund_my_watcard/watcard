@@ -4,10 +4,14 @@ import argparse
 import json
 import os
 import time
+import base64
 
 from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 CONFIG_FILE_PATH = os.path.expanduser("~") + "/.watcard_config"
 PRINT_PREFIX = "[fund-my-watcard] "
@@ -15,11 +19,12 @@ PRINT_PREFIX = "[fund-my-watcard] "
 
 def generate_config_file():
     if os.path.isfile(CONFIG_FILE_PATH):
-        print(PRINT_PREFIX + "Config file '.watcard_config' has already exists.")
+        print(PRINT_PREFIX + "Config file '.watcard_config' already exists.")
         print(PRINT_PREFIX + "Opening " + CONFIG_FILE_PATH + ".")
         time.sleep(1)
         os.system("vim {}".format(CONFIG_FILE_PATH))
         return
+
     _config_info = {
         "userName": "User name of WatIM",
         "password": "Password of WatIM",
@@ -36,7 +41,7 @@ def generate_config_file():
         "trnCardNumber": "Card number",
         "trnExpMonth": "Expire month",
         "trnExpYear": "Expire year",
-        "trnCardCvd": "Card CVD (3 digit numbers on the back of card)"
+        "trnCardCvd": "Card CVD (3 digit numbers on the back of card)",
     }
     with open(CONFIG_FILE_PATH, "w+") as json_file:
         json.dump(_config_info, json_file, indent=2)
@@ -70,10 +75,12 @@ class MyWatCard:
     def add_fund(self, amount):
         try:
             chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument('--headless')
-            chrome_options.add_argument('--no-sandbox')
-            chrome_options.add_argument('--incognito')
-            with Browser("chrome", **{"executable_path": ChromeDriverManager().install()}, options=chrome_options) as browser:
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--incognito")
+            with Browser(
+                "chrome", **{"executable_path": ChromeDriverManager().install()}, options=chrome_options
+            ) as browser:
                 browser.visit("https://watcard.uwaterloo.ca/OneWebUW/addfunds_watiam.asp")
                 browser.fill("UserName", self.userName)
                 browser.fill("Password", self.password)
@@ -112,8 +119,7 @@ class MyWatCard:
 class NoConfigFileException(Exception):
     """Raised when config file is not found."""
 
-    def __init__(self,
-                 message=PRINT_PREFIX + "Cannot find config file under user directory, try 'watcard --config'."):
+    def __init__(self, message=PRINT_PREFIX + "Cannot find config file under user directory, try 'watcard --config'."):
         super(NoConfigFileException, self).__init__(message)
         self.message = message
 
@@ -127,6 +133,31 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.config:
+        # Prompt user to enter a password when they create the config file
+        password_provided_initial = input("Please enter a password to protect your config file: ")
+        password_provided_confirm = input("Please confirm your password: ")
+
+        password = 0
+
+        while password_provided_initial != password_provided_confirm:
+            print("Passwords do not match. Please try again.")
+            password_provided_initial = input("Please enter a password to protect your config file: ")
+            password_provided_confirm = input("Please confirm your password: ")
+
+        password = password_provided_initial.encode()
+
+        # Randomly generated salt (use the same one)
+        salt = b"x\xe6}\xb5\r+\xbf\xa2\x10+\xed\x94Q\xc2\x14+"
+
+        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=100000, backend=default_backend())
+
+        key = base64.urlsafe_b64encode(kdf.derive(password))
+
+        # Save the key to a file
+        file = open("key.key", "wb")
+        file.write(key)
+        file.close()
+
         generate_config_file()
 
     if args.fund:
