@@ -25,7 +25,8 @@ optional arguments:
   -c, --config          generate the config file
   -f FUND, --fund FUND  the fund amount to the WatCard
   -v, --version         show the version of fund-my-watcard
-
+  -e, --encrypt         encrypt the config file with user defined password
+  -d, --encrypt         decrypt the config file so you can edit it
 ```
 
 One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initialize and edit the config file.
@@ -39,7 +40,7 @@ An example of **.watcard_config**:
   "ordName": "Name on the credit card",
   "phoneNumber": "Phone number",
   "address1": "Home address 1",
-  "address2": "Home address 2 (Remove all the characters if no address2)",
+  "address2": "Home address 2 (Blank if no address2)",
   "ordPostalCode": "Postal code",
   "ordCity": "City",
   "ordEmailAddress": "Email address",
@@ -49,7 +50,8 @@ An example of **.watcard_config**:
   "trnCardNumber": "Card number",
   "trnExpMonth": "Expiry month",
   "trnExpYear": "Expiry year",
-  "trnCardCvd": "Card CVD (3 digit number on the back of the card)"
+  "trnCardCvd": "Card CVD (3 digit number on the back of the card)",
+  "encrypted": "False"
 }
 ```
 
@@ -72,7 +74,8 @@ An example of filled **.watcard_config**:
   "trnCardNumber": "1234567890123456",
   "trnExpMonth": "01",
   "trnExpYear": "25",
-  "trnCardCvd": "123"
+  "trnCardCvd": "123",
+  "encrypted": "False"
 }
 ```
 

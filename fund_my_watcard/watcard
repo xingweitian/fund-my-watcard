@@ -64,7 +64,7 @@ def generate_config_file():
         "ordName": "Name on the credit card",
         "phoneNumber": "Phone number",
         "address1": "Home address 1",
-        "address2": "Home address 2 (Leave empty if no address2)",
+        "address2": "Home address 2 (Blank if no address2)",
         "ordPostalCode": "Postal code",
         "ordCity": "City",
         "ordEmailAddress": "Email address",
