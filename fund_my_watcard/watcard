@@ -114,11 +114,16 @@ def generate_key_file():
     key = base64.urlsafe_b64encode(kdf.derive(password))
 
     # Save the key to a file
-    file = open(KEY_FILE_PATH, "wb")
-    file.write(key)
-    file.close()
+    with open(KEY_FILE_PATH, "wb") as f:
+        f.write(key)
 
     print(PRINT_PREFIX + "Generated key file at " + KEY_FILE_PATH + " successfully.")
+
+
+def encrypt_config_file(config: dict, f: Fernet) -> dict:
+    for k, v in config.items():
+        config[k] = f.encrypt(v.encode()).decode("utf8")
+    return config
 
 
 class MyWatCard:
@@ -228,40 +233,20 @@ if __name__ == "__main__":
         if query_yes_no("This will encrypt your config file! Do you want to proceed?", "no"):
             generate_key_file()
 
-            key_file = open(KEY_FILE_PATH, "rb")
-            key = key_file.read()
-            key_file.close()
+            with open(KEY_FILE_PATH, "rb") as f:
+                key = f.read()
 
-            # Encode the config file
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
+            else:
+                raise NoConfigFileException()
 
-            # Encrypt the config file
             f = Fernet(key)
-
-            # Prepare the JSON object
-            _config_info = {
-                "userName": f.encrypt(_config["userName"].encode()).decode("utf-8"),
-                "password": f.encrypt(_config["password"].encode()).decode("utf-8"),
-                "ordName": f.encrypt(_config["ordName"].encode()).decode("utf-8"),
-                "phoneNumber": f.encrypt(_config["phoneNumber"].encode()).decode("utf-8"),
-                "address1": f.encrypt(_config["address1"].encode()).decode("utf-8"),
-                "address2": f.encrypt(_config["address2"].encode()).decode("utf-8"),
-                "ordPostalCode": f.encrypt(_config["ordPostalCode"].encode()).decode("utf-8"),
-                "ordCity": f.encrypt(_config["ordCity"].encode()).decode("utf-8"),
-                "ordEmailAddress": f.encrypt(_config["ordEmailAddress"].encode()).decode("utf-8"),
-                "paymentMethod": f.encrypt(_config["paymentMethod"].encode()).decode("utf-8"),
-                "trnCardOwner": f.encrypt(_config["trnCardOwner"].encode()).decode("utf-8"),
-                "trnCardType": f.encrypt(_config["trnCardType"].encode()).decode("utf-8"),
-                "trnCardNumber": f.encrypt(_config["trnCardNumber"].encode()).decode("utf-8"),
-                "trnExpMonth": f.encrypt(_config["trnExpMonth"].encode()).decode("utf-8"),
-                "trnExpYear": f.encrypt(_config["trnExpYear"].encode()).decode("utf-8"),
-                "trnCardCvd": f.encrypt(_config["trnCardCvd"].encode()).decode("utf-8"),
-            }
+            _encrypted_config_info = encrypt_config_file(_config, f)
 
             with open(CONFIG_FILE_PATH, "w+") as json_file:
-                json.dump(_config_info, json_file, indent=2)
+                json.dump(_encrypted_config_info, json_file, indent=2)
             assert os.path.isfile(CONFIG_FILE_PATH) is True
 
             print("Config file successfully encrypted.")
