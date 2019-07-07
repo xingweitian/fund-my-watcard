@@ -6,6 +6,7 @@ import os
 import time
 import base64
 
+from cryptography.fernet import Fernet
 from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
@@ -14,7 +15,39 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 CONFIG_FILE_PATH = os.path.expanduser("~") + "/.watcard_config"
+KEY_FILE_PATH = os.path.expanduser("~") + "/.key"
 PRINT_PREFIX = "[fund-my-watcard] "
+
+
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True, "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        print(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == "":
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            print("Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n")
 
 
 def generate_config_file():
@@ -50,6 +83,42 @@ def generate_config_file():
     print(PRINT_PREFIX + "Opening " + CONFIG_FILE_PATH + ".")
     time.sleep(1)
     os.system("vim {}".format(CONFIG_FILE_PATH))
+
+
+def generate_key_file():
+    if os.path.isfile(KEY_FILE_PATH):
+        print(PRINT_PREFIX + "Key file '.key' already exists.")
+        if query_yes_no("Do you want to remove the key file (set a new password with watcard -e)?", "no"):
+            time.sleep(1)
+            os.remove(KEY_FILE_PATH)
+            print("Key file at " + KEY_FILE_PATH + " was successfully removed. To set a new password, use watcard -e.")
+            return
+        return
+
+    # Prompt user to enter a password when they create the config file
+    password_provided_initial = input("Please enter a password to protect your config file: ")
+    password_provided_confirm = input("Please confirm your password: ")
+
+    while password_provided_initial != password_provided_confirm:
+        print("Passwords do not match. Please try again.")
+        password_provided_initial = input("Please enter a password to protect your config file: ")
+        password_provided_confirm = input("Please confirm your password: ")
+
+    password = password_provided_initial.encode()
+
+    # Randomly generated salt (use the same one)
+    salt = b"x\xe6}\xb5\r+\xbf\xa2\x10+\xed\x94Q\xc2\x14+"
+
+    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=100000, backend=default_backend())
+
+    key = base64.urlsafe_b64encode(kdf.derive(password))
+
+    # Save the key to a file
+    file = open(KEY_FILE_PATH, "wb")
+    file.write(key)
+    file.close()
+
+    print(PRINT_PREFIX + "Generated key file at " + KEY_FILE_PATH + " successfully.")
 
 
 class MyWatCard:
@@ -125,39 +194,17 @@ class NoConfigFileException(Exception):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Fund my WatCard: A tool to add funds to WatCard easily.")
+    parser = argparse.ArgumentParser(description="Fund my WatCard: A tool that add funds to your WatCard easily.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--config", help="generate the config file", action="store_true")
     group.add_argument("-f", "--fund", type=float, help="the amount to add into the WatCard", action="store")
     group.add_argument("-v", "--version", help="show the version of fund-my-watcard", action="store_true")
+    group.add_argument(
+        "-e", "--encrypt", help="encrypt the config file with user defined password", action="store_true"
+    )
     args = parser.parse_args()
 
     if args.config:
-        # Prompt user to enter a password when they create the config file
-        password_provided_initial = input("Please enter a password to protect your config file: ")
-        password_provided_confirm = input("Please confirm your password: ")
-
-        password = 0
-
-        while password_provided_initial != password_provided_confirm:
-            print("Passwords do not match. Please try again.")
-            password_provided_initial = input("Please enter a password to protect your config file: ")
-            password_provided_confirm = input("Please confirm your password: ")
-
-        password = password_provided_initial.encode()
-
-        # Randomly generated salt (use the same one)
-        salt = b"x\xe6}\xb5\r+\xbf\xa2\x10+\xed\x94Q\xc2\x14+"
-
-        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=100000, backend=default_backend())
-
-        key = base64.urlsafe_b64encode(kdf.derive(password))
-
-        # Save the key to a file
-        file = open("key.key", "wb")
-        file.write(key)
-        file.close()
-
         generate_config_file()
 
     if args.fund:
@@ -177,5 +224,47 @@ if __name__ == "__main__":
     if args.version:
         print("fund-my-watcard v{}".format("0.2.1"))
 
-    if not args.config and not args.fund and not args.version:
+    if args.encrypt:
+        if query_yes_no("This will encrypt your config file! Do you want to proceed?", "no"):
+            generate_key_file()
+
+            key_file = open(KEY_FILE_PATH, "rb")
+            key = key_file.read()
+            key_file.close()
+
+            # Encode the config file
+            if os.path.isfile(CONFIG_FILE_PATH):
+                with open(CONFIG_FILE_PATH) as f:
+                    _config = json.load(f)
+
+            # Encrypt the config file
+            f = Fernet(key)
+
+            # Prepare the JSON object
+            _config_info = {
+                "userName": f.encrypt(_config["userName"].encode()).decode("utf-8"),
+                "password": f.encrypt(_config["password"].encode()).decode("utf-8"),
+                "ordName": f.encrypt(_config["ordName"].encode()).decode("utf-8"),
+                "phoneNumber": f.encrypt(_config["phoneNumber"].encode()).decode("utf-8"),
+                "address1": f.encrypt(_config["address1"].encode()).decode("utf-8"),
+                "address2": f.encrypt(_config["address2"].encode()).decode("utf-8"),
+                "ordPostalCode": f.encrypt(_config["ordPostalCode"].encode()).decode("utf-8"),
+                "ordCity": f.encrypt(_config["ordCity"].encode()).decode("utf-8"),
+                "ordEmailAddress": f.encrypt(_config["ordEmailAddress"].encode()).decode("utf-8"),
+                "paymentMethod": f.encrypt(_config["paymentMethod"].encode()).decode("utf-8"),
+                "trnCardOwner": f.encrypt(_config["trnCardOwner"].encode()).decode("utf-8"),
+                "trnCardType": f.encrypt(_config["trnCardType"].encode()).decode("utf-8"),
+                "trnCardNumber": f.encrypt(_config["trnCardNumber"].encode()).decode("utf-8"),
+                "trnExpMonth": f.encrypt(_config["trnExpMonth"].encode()).decode("utf-8"),
+                "trnExpYear": f.encrypt(_config["trnExpYear"].encode()).decode("utf-8"),
+                "trnCardCvd": f.encrypt(_config["trnCardCvd"].encode()).decode("utf-8"),
+            }
+
+            with open(CONFIG_FILE_PATH, "w+") as json_file:
+                json.dump(_config_info, json_file, indent=2)
+            assert os.path.isfile(CONFIG_FILE_PATH) is True
+
+            print("Config file successfully encrypted.")
+
+    if not args.config and not args.fund and not args.version and not args.encrypt:
         parser.parse_args(["-h"])
