@@ -15,8 +15,8 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 CONFIG_FILE_PATH = os.path.expanduser("~") + "/.watcard_config"
-KEY_FILE_PATH = os.path.expanduser("~") + "/.key"
 PRINT_PREFIX = "[fund-my-watcard] "
+SALT = b"x\xe6}\xb5\r+\xbf\xa2\x10+\xed\x94Q\xc2\x14+"
 
 
 def query_yes_no(question, default="yes"):
@@ -77,8 +77,8 @@ def generate_config_file():
         "trnCardCvd": "Card CVD (3 digit number on the back of the card)",
         "encrypted": "False",
     }
-    with open(CONFIG_FILE_PATH, "w+") as json_file:
-        json.dump(_config_info, json_file, indent=2)
+    with open(CONFIG_FILE_PATH, "w+") as f:
+        json.dump(_config_info, f, indent=2)
     assert os.path.isfile(CONFIG_FILE_PATH) is True
     print(PRINT_PREFIX + "Generate config file at user directory successfully. Please fill your information.")
     print(PRINT_PREFIX + "Opening " + CONFIG_FILE_PATH + ".")
@@ -86,44 +86,17 @@ def generate_config_file():
     os.system("vim {}".format(CONFIG_FILE_PATH))
 
 
-def generate_key_file():
-    if os.path.isfile(KEY_FILE_PATH):
-        print(PRINT_PREFIX + "Key file '.key' already exists.")
-        if query_yes_no("Do you want to remove the key file (set a new password with watcard -e)?", "no"):
-            time.sleep(1)
-            os.remove(KEY_FILE_PATH)
-            print("Key file at " + KEY_FILE_PATH + " was successfully removed. To set a new password, use watcard -e.")
-            return
-        return
+def input_and_encrypt_password():
+    return encrypt_password(input(PRINT_PREFIX + "Please input your password: ").encode())
 
-    # Prompt user to enter a password when they create the config file
-    password_provided_initial = input("Please enter a password to protect your config file: ")
-    password_provided_confirm = input("Please confirm your password: ")
 
-    while password_provided_initial != password_provided_confirm:
-        print("Passwords do not match. Please try again.")
-        password_provided_initial = input("Please enter a password to protect your config file: ")
-        password_provided_confirm = input("Please confirm your password: ")
-
-    password = password_provided_initial.encode()
-
-    # Randomly generated salt (use the same one)
-    salt = b"x\xe6}\xb5\r+\xbf\xa2\x10+\xed\x94Q\xc2\x14+"
-
-    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=100000, backend=default_backend())
-
-    key = base64.urlsafe_b64encode(kdf.derive(password))
-
-    # Save the key to a file
-    with open(KEY_FILE_PATH, "wb") as f:
-        f.write(key)
-
-    print(PRINT_PREFIX + "Generated key file at " + KEY_FILE_PATH + " successfully.")
+def encrypt_password(password):
+    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=SALT, iterations=100000, backend=default_backend())
+    return base64.urlsafe_b64encode(kdf.derive(password))
 
 
 def encrypt_config_file(config: dict, f: Fernet) -> dict:
     for k, v in config.items():
-        # Check for the "encrypted" key value pair
         if config[k] != "False":
             config[k] = f.encrypt(v.encode()).decode("utf8")
         else:
@@ -133,7 +106,6 @@ def encrypt_config_file(config: dict, f: Fernet) -> dict:
 
 def decrypt_config_file(config: dict, f: Fernet) -> dict:
     for k, v in config.items():
-        # Check for the "encrypted" key value pair
         if config[k] != "True":
             config[k] = f.decrypt(v.encode()).decode("utf8")
         else:
@@ -233,6 +205,10 @@ if __name__ == "__main__":
         if os.path.isfile(CONFIG_FILE_PATH):
             with open(CONFIG_FILE_PATH) as f:
                 _config = json.load(f)
+            if _config["encrypted"] == "True":
+                print(PRINT_PREFIX + "Config file has been encrypted, needs to be decrypted at first.")
+                f = Fernet(input_and_encrypt_password())
+                decrypt_config_file(_config, f)
             _my_wat_card = MyWatCard(**_config)
             res = _my_wat_card.add_fund(amount)
             if res:
@@ -246,7 +222,7 @@ if __name__ == "__main__":
         print("fund-my-watcard v{}".format("0.2.1"))
 
     if args.encrypt:
-        if query_yes_no("This will encrypt your config file! Do you want to proceed?", "no"):
+        if query_yes_no(PRINT_PREFIX + "This will encrypt your config file! Do you want to proceed?", "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
@@ -254,31 +230,24 @@ if __name__ == "__main__":
                 raise NoConfigFileException()
 
             if _config["encrypted"] == "True":
-                print("Your config file is already encrypted. To decrypt it, please use watcard -d.")
+                print(PRINT_PREFIX + "Your config file is already encrypted. To decrypt it, please try watcard -d.")
             else:
-                generate_key_file()
+                if os.path.isfile(CONFIG_FILE_PATH):
+                    with open(CONFIG_FILE_PATH) as f:
+                        _config = json.load(f)
+                else:
+                    raise NoConfigFileException()
 
-                if os.path.isfile(KEY_FILE_PATH):
-                    with open(KEY_FILE_PATH, "rb") as f:
-                        key = f.read()
+                f = Fernet(encrypt_password(input(PRINT_PREFIX + "Please input your password: ").encode()))
+                _encrypted_config_info = encrypt_config_file(_config, f)
 
-                    if os.path.isfile(CONFIG_FILE_PATH):
-                        with open(CONFIG_FILE_PATH) as f:
-                            _config = json.load(f)
-                    else:
-                        raise NoConfigFileException()
+                with open(CONFIG_FILE_PATH, "w+") as json_file:
+                    json.dump(_encrypted_config_info, json_file, indent=2)
 
-                    f = Fernet(key)
-                    _encrypted_config_info = encrypt_config_file(_config, f)
-
-                    with open(CONFIG_FILE_PATH, "w+") as json_file:
-                        json.dump(_encrypted_config_info, json_file, indent=2)
-                    assert os.path.isfile(CONFIG_FILE_PATH) is True
-
-                    print("Config file successfully encrypted.")
+                print(PRINT_PREFIX + "Config file successfully encrypted.")
 
     if args.decrypt:
-        if query_yes_no("This will decrypt your config file! Do you want to proceed?", "no"):
+        if query_yes_no(PRINT_PREFIX + "This will decrypt your config file! Do you want to proceed?", "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
@@ -286,26 +255,21 @@ if __name__ == "__main__":
                 raise NoConfigFileException()
 
             if _config["encrypted"] == "False":
-                print("Your config file is already decrypted. To encrypt it, please use watcard -e.")
+                print(PRINT_PREFIX + "Your config file is already decrypted. To encrypt it, please use watcard -e.")
             else:
-                if os.path.isfile(KEY_FILE_PATH):
-                    with open(KEY_FILE_PATH, "rb") as f:
-                        key = f.read()
+                if os.path.isfile(CONFIG_FILE_PATH):
+                    with open(CONFIG_FILE_PATH) as f:
+                        _config = json.load(f)
+                else:
+                    raise NoConfigFileException()
 
-                    if os.path.isfile(CONFIG_FILE_PATH):
-                        with open(CONFIG_FILE_PATH) as f:
-                            _config = json.load(f)
-                    else:
-                        raise NoConfigFileException()
+                f = Fernet(input_and_encrypt_password())
+                _decrypted_config_info = decrypt_config_file(_config, f)
 
-                    f = Fernet(key)
-                    _decrypted_config_info = decrypt_config_file(_config, f)
+                with open(CONFIG_FILE_PATH, "w+") as json_file:
+                    json.dump(_decrypted_config_info, json_file, indent=2)
 
-                    with open(CONFIG_FILE_PATH, "w+") as json_file:
-                        json.dump(_decrypted_config_info, json_file, indent=2)
-                    assert os.path.isfile(CONFIG_FILE_PATH) is True
+                print(PRINT_PREFIX + "Config file successfully decrypted.")
 
-                    print("Config file successfully decrypted.")
-
-    if not args.config and not args.fund and not args.version and not args.encrypt and not args.decrypt:
+    if not (args.config or args.fund or args.version or args.encrypt or args.decrypt):
         parser.parse_args(["-h"])
