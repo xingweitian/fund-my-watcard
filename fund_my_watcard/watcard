@@ -4,47 +4,122 @@ import argparse
 import json
 import os
 import time
+import base64
 
+from cryptography.fernet import Fernet
 from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.fernet import InvalidToken
 
 CONFIG_FILE_PATH = os.path.expanduser("~") + "/.watcard_config"
 PRINT_PREFIX = "[fund-my-watcard] "
+SALT = b"x\xe6}\xb5\r+\xbf\xa2\x10+\xed\x94Q\xc2\x14+"
+
+
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    Args:
+        question: a string that is presented to the user.
+        default: the presumed answer if the user just hits <Enter>. It must be "yes" (the default),
+        "no" or None (meaning an answer is required of the user).
+
+    Returns:
+        True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True, "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        print(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == "":
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            print("Please respond with 'yes' or 'no' (or 'y' or 'n').\n")
 
 
 def generate_config_file():
     if os.path.isfile(CONFIG_FILE_PATH):
-        print(PRINT_PREFIX + "Config file '.watcard_config' has already exists.")
-        print(PRINT_PREFIX + "Opening " + CONFIG_FILE_PATH + ".")
+        report_message("Config file '.watcard_config' already exists.")
+        report_message("Opening " + CONFIG_FILE_PATH + ".")
         time.sleep(1)
         os.system("vim {}".format(CONFIG_FILE_PATH))
         return
+
     _config_info = {
-        "userName": "User name of WatIM",
-        "password": "Password of WatIM",
+        "userName": "WatIAM username",
+        "password": "WatIAM username",
         "ordName": "Name on the credit card",
         "phoneNumber": "Phone number",
         "address1": "Home address 1",
-        "address2": "Home address 2 (Remove all the characters if no address2)",
+        "address2": "Home address 2 (Blank if no address2)",
         "ordPostalCode": "Postal code",
         "ordCity": "City",
         "ordEmailAddress": "Email address",
-        "paymentMethod": "The payment method ('CC' for 'Credit Card')",
+        "paymentMethod": "Payment method ('CC' for 'Credit Card')",
         "trnCardOwner": "Card owner",
-        "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card')",
+        "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card', see more card types in README)",
         "trnCardNumber": "Card number",
-        "trnExpMonth": "Expire month",
-        "trnExpYear": "Expire year",
-        "trnCardCvd": "Card CVD (3 digit numbers on the back of card)"
+        "trnExpMonth": "Expiry month",
+        "trnExpYear": "Expiry year",
+        "trnCardCvd": "Card CVD (3 digit number on the back of the card)",
+        "encrypted": "False",
     }
-    with open(CONFIG_FILE_PATH, "w+") as json_file:
-        json.dump(_config_info, json_file, indent=2)
+    with open(CONFIG_FILE_PATH, "w+") as f:
+        json.dump(_config_info, f, indent=2)
     assert os.path.isfile(CONFIG_FILE_PATH) is True
-    print(PRINT_PREFIX + "Generate config file at user directory successfully. Please fill your information.")
-    print(PRINT_PREFIX + "Opening " + CONFIG_FILE_PATH + ".")
+    report_message("Generate config file at user directory successfully. Please fill your information.")
+    report_message("Opening " + CONFIG_FILE_PATH + ".")
     time.sleep(1)
     os.system("vim {}".format(CONFIG_FILE_PATH))
+
+
+def input_and_encrypt_password():
+    return encrypt_password(input(PRINT_PREFIX + "Please input your password: ").encode())
+
+
+def encrypt_password(password):
+    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=SALT, iterations=100000, backend=default_backend())
+    return base64.urlsafe_b64encode(kdf.derive(password))
+
+
+def encrypt_config_file(config: dict, f: Fernet) -> dict:
+    for k, v in config.items():
+        config[k] = f.encrypt(v.encode()).decode("utf8")
+    return config
+
+
+def decrypt_config_file(config: dict, f: Fernet) -> dict:
+    try:
+        f.decrypt(config["encrypted"].encode())
+    except InvalidToken:
+        report_error("Invalid password. Decrypting config file failed.")
+    for k, v in config.items():
+        config[k] = f.decrypt(v.encode()).decode("utf8")
+    return config
+
+
+def report_error(msg: str):
+    print(PRINT_PREFIX + msg)
+    exit(1)
+
+
+def report_message(msg: str):
+    print(PRINT_PREFIX + msg)
 
 
 class MyWatCard:
@@ -70,10 +145,12 @@ class MyWatCard:
     def add_fund(self, amount):
         try:
             chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument('--headless')
-            chrome_options.add_argument('--no-sandbox')
-            chrome_options.add_argument('--incognito')
-            with Browser("chrome", **{"executable_path": ChromeDriverManager().install()}, options=chrome_options) as browser:
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--incognito")
+            with Browser(
+                "chrome", **{"executable_path": ChromeDriverManager().install()}, options=chrome_options
+            ) as browser:
                 browser.visit("https://watcard.uwaterloo.ca/OneWebUW/addfunds_watiam.asp")
                 browser.fill("UserName", self.userName)
                 browser.fill("Password", self.password)
@@ -102,28 +179,23 @@ class MyWatCard:
                 if browser.find_by_text("Funds were added to your card.").first is not None:
                     return True
         except Exception as e:
-            print(str(e))
+            report_message(str(e))
             return False
 
     def check_balance(self):
         pass
 
 
-class NoConfigFileException(Exception):
-    """Raised when config file is not found."""
-
-    def __init__(self,
-                 message=PRINT_PREFIX + "Cannot find config file under user directory, try 'watcard --config'."):
-        super(NoConfigFileException, self).__init__(message)
-        self.message = message
-
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Fund my WatCard: A tool to add funds to WatCard easily.")
+    parser = argparse.ArgumentParser(description="Fund my WatCard: A tool that add funds to your WatCard easily.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--config", help="generate the config file", action="store_true")
     group.add_argument("-f", "--fund", type=float, help="the amount to add into the WatCard", action="store")
     group.add_argument("-v", "--version", help="show the version of fund-my-watcard", action="store_true")
+    group.add_argument(
+        "-e", "--encrypt", help="encrypt the config file with user defined password", action="store_true"
+    )
+    group.add_argument("-d", "--decrypt", help="decrypt the config file so you can edit it", action="store_true")
     args = parser.parse_args()
 
     if args.config:
@@ -134,17 +206,71 @@ if __name__ == "__main__":
         if os.path.isfile(CONFIG_FILE_PATH):
             with open(CONFIG_FILE_PATH) as f:
                 _config = json.load(f)
+            if _config["encrypted"] != "False":
+                report_message("Config file has been encrypted, needs to be decrypted at first.")
+                f = Fernet(input_and_encrypt_password())
+                decrypt_config_file(_config, f)
             _my_wat_card = MyWatCard(**_config)
             res = _my_wat_card.add_fund(amount)
             if res:
-                print(PRINT_PREFIX + "Adding ${} to account {} successfully.".format(amount, _config["userName"]))
+                report_message("Adding ${} to account {} successfully.".format(amount, _config["userName"]))
             else:
-                print(PRINT_PREFIX + "Adding ${} to account {} failed.".format(amount, _config["userName"]))
+                report_message("Adding ${} to account {} failed.".format(amount, _config["userName"]))
         else:
-            raise NoConfigFileException()
+            report_error("Cannot find config file under user directory, try 'watcard --config'.")
 
     if args.version:
         print("fund-my-watcard v{}".format("0.2.1"))
 
-    if not args.config and not args.fund and not args.version:
+    if args.encrypt:
+        if query_yes_no(PRINT_PREFIX + "This will encrypt your config file! Do you want to proceed?", "no"):
+            if os.path.isfile(CONFIG_FILE_PATH):
+                with open(CONFIG_FILE_PATH) as f:
+                    _config = json.load(f)
+            else:
+                report_error("Cannot find config file under user directory, try 'watcard --config'.")
+
+            if _config["encrypted"] != "False":
+                report_message("Your config file is already encrypted. To decrypt it, please try watcard -d.")
+            else:
+                if os.path.isfile(CONFIG_FILE_PATH):
+                    with open(CONFIG_FILE_PATH) as f:
+                        _config = json.load(f)
+                else:
+                    report_error("Cannot find config file under user directory, try 'watcard --config'.")
+
+                f = Fernet(encrypt_password(input(PRINT_PREFIX + "Please input your password: ").encode()))
+                _encrypted_config_info = encrypt_config_file(_config, f)
+
+                with open(CONFIG_FILE_PATH, "w+") as json_file:
+                    json.dump(_encrypted_config_info, json_file, indent=2)
+
+                report_message("Config file successfully encrypted.")
+
+    if args.decrypt:
+        if query_yes_no(PRINT_PREFIX + "This will decrypt your config file! Do you want to proceed?", "no"):
+            if os.path.isfile(CONFIG_FILE_PATH):
+                with open(CONFIG_FILE_PATH) as f:
+                    _config = json.load(f)
+            else:
+                report_error("Cannot find config file under user directory, try 'watcard --config'.")
+
+            if _config["encrypted"] == "False":
+                report_message("Your config file is already decrypted. To encrypt it, please use watcard -e.")
+            else:
+                if os.path.isfile(CONFIG_FILE_PATH):
+                    with open(CONFIG_FILE_PATH) as f:
+                        _config = json.load(f)
+                else:
+                    report_error("Cannot find config file under user directory, try 'watcard --config'.")
+
+                f = Fernet(input_and_encrypt_password())
+                _decrypted_config_info = decrypt_config_file(_config, f)
+
+                with open(CONFIG_FILE_PATH, "w+") as json_file:
+                    json.dump(_decrypted_config_info, json_file, indent=2)
+
+                report_message("Config file successfully decrypted.")
+
+    if not (args.config or args.fund or args.version or args.encrypt or args.decrypt):
         parser.parse_args(["-h"])
