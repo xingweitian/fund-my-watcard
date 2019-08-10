@@ -44,7 +44,7 @@ An example of **.watcard_config**:
   "ordPostalCode": "Postal code",
   "ordCity": "City",
   "ordEmailAddress": "Email address",
-  "paymentMethod": "The payment method ('CC' for 'Credit Card')",
+  "paymentMethod": "Payment method ('CC' for 'Credit Card')",
   "trnCardOwner": "Card owner",
   "trnCardType": "Card type ('VI' for 'Visa', 'MC' for 'Master Card', see more card types below)",
   "trnCardNumber": "Card number",
