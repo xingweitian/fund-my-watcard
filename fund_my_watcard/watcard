@@ -76,7 +76,7 @@ def generate_config_file():
     report_message("Generate config file at user directory successfully. Please fill your information.")
     report_message("Opening " + CONFIG_FILE_PATH + ".")
     time.sleep(1)
-    os.system("vim {}".format(CONFIG_FILE_PATH))
+    open_config_file()
 
 
 def reset_config_file():
@@ -84,7 +84,7 @@ def reset_config_file():
     report_message("Reset config file successfully. Try 'watcard --config' to fill your information.")
 
 
-def write_template_to_config_file):
+def write_template_to_config_file():
     _config_info = {
         "userName": "WatIAM username",
         "password": "WatIAM username",
