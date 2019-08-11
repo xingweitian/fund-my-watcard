@@ -14,7 +14,7 @@ pip3 install fund-my-watcard
 
 ## Usage
 
-```bash
+```
 teachertian@v1040-wn-rt-c-83-249 ~/PycharmProjects/fundmywatcard: watcard
 usage: watcard [-h] [-c | -f FUND | -v]
 
