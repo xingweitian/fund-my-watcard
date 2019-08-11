@@ -72,6 +72,19 @@ def generate_config_file():
         open_config_file()
         return
 
+    write_template_to_config_file()
+    report_message("Generate config file at user directory successfully. Please fill your information.")
+    report_message("Opening " + CONFIG_FILE_PATH + ".")
+    time.sleep(1)
+    os.system("vim {}".format(CONFIG_FILE_PATH))
+
+
+def reset_config_file():
+    write_template_to_config_file()
+    report_message("Reset config file successfully. Try 'watcard --config' to fill your information.")
+
+
+def write_template_to_config_file):
     _config_info = {
         "userName": "WatIAM username",
         "password": "WatIAM username",
@@ -94,10 +107,6 @@ def generate_config_file():
     with open(CONFIG_FILE_PATH, "w+") as f:
         json.dump(_config_info, f, indent=2)
     assert os.path.isfile(CONFIG_FILE_PATH) is True
-    report_message("Generate config file at user directory successfully. Please fill your information.")
-    report_message("Opening " + CONFIG_FILE_PATH + ".")
-    time.sleep(1)
-    open_config_file()
 
 
 def input_and_encrypt_password():
@@ -208,6 +217,7 @@ if __name__ == "__main__":
         "-e", "--encrypt", help="encrypt the config file with user defined password", action="store_true"
     )
     group.add_argument("-d", "--decrypt", help="decrypt the config file so you can edit it", action="store_true")
+    group.add_argument("-r", "--reset", help="reset the config file", action="store_true")
     args = parser.parse_args()
 
     if args.config:
@@ -243,7 +253,7 @@ if __name__ == "__main__":
                 report_error("Cannot find config file under user directory, try 'watcard --config'.")
 
             if _config["encrypted"] != "False":
-                report_message("Your config file is already encrypted. To decrypt it, please try watcard -d.")
+                report_message("Your config file is already encrypted. To decrypt it, please try 'watcard -d'.")
             else:
                 if os.path.isfile(CONFIG_FILE_PATH):
                     with open(CONFIG_FILE_PATH) as f:
@@ -268,7 +278,7 @@ if __name__ == "__main__":
                 report_error("Cannot find config file under user directory, try 'watcard --config'.")
 
             if _config["encrypted"] == "False":
-                report_message("Your config file is already decrypted. To encrypt it, please use watcard -e.")
+                report_message("Your config file is already decrypted. To encrypt it, please use 'watcard -e'.")
             else:
                 if os.path.isfile(CONFIG_FILE_PATH):
                     with open(CONFIG_FILE_PATH) as f:
@@ -284,5 +294,9 @@ if __name__ == "__main__":
 
                 report_message("Config file successfully decrypted.")
 
-    if not (args.config or args.fund or args.version or args.encrypt or args.decrypt):
+    if args.reset:
+        if query_yes_no(PRINT_PREFIX + "This will reset your config file! Do you want to proceed?", "no"):
+            reset_config_file()
+
+    if not (args.config or args.fund or args.version or args.encrypt or args.decrypt or args.reset):
         parser.parse_args(["-h"])

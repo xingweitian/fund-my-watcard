@@ -16,17 +16,18 @@ pip3 install fund-my-watcard
 
 ```
 teachertian@v1040-wn-rt-c-83-249 ~/PycharmProjects/fundmywatcard: watcard
-usage: watcard [-h] [-c | -f FUND | -v]
+usage: watcard [-h] [-c | -f FUND | -v | -e | -d | -r]
 
-Fund my WatCard: A tool to fund WatCard easily.
+Fund my WatCard: A tool that add funds to your WatCard easily.
 
 optional arguments:
   -h, --help            show this help message and exit
   -c, --config          generate the config file
-  -f FUND, --fund FUND  the fund amount to the WatCard
+  -f FUND, --fund FUND  the amount to add into the WatCard
   -v, --version         show the version of fund-my-watcard
   -e, --encrypt         encrypt the config file with user defined password
-  -d, --encrypt         decrypt the config file so you can edit it
+  -d, --decrypt         decrypt the config file so you can edit it
+  -r, --reset           reset the config file
 ```
 
 One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initialize and edit the config file.
