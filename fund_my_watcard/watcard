@@ -57,9 +57,9 @@ def query_yes_no(question, default="yes"):
 def open_config_file():
     operating_system = platform.system()
     if operating_system == "Linux":
-        os.system("vim {}".format(CONFIG_FILE_PATH))
+        subprocess.call(["vi", CONFIG_FILE_PATH])
     elif operating_system == "Windows":
-        subprocess.Popen(["notepad.exe", CONFIG_FILE_PATH])
+        subprocess.call(["notepad.exe", CONFIG_FILE_PATH])
     elif operating_system == "Darwin":
         subprocess.call(["open", CONFIG_FILE_PATH])
 
