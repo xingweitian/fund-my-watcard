@@ -3,6 +3,8 @@
 
 New feature:
 1. Add encryption and decryption to config file
+2. Add a new argument "--reset" to reset the config file
+3. Use the corresponding commands in different platforms when opening the config file
 
 ### Version 0.2.1
 > release on 2019-07-04
