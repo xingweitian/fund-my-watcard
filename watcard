@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 import sys
-
+import fund_my_watcard
 
 if sys.version_info[0] == 3:
-    import fund_my_watcard
 
     if __name__ == "__main__":
         fund_my_watcard.main()
 else:
-    from fund_my_watcard import report_error
 
-    report_error("Python3 is required, try to run this script by using 'python3 watcard'.")
+    fund_my_watcard.report_error("Python3 is required, try to run this script by using 'python3 watcard'.")
