@@ -1,5 +1,5 @@
 ### Version 0.3.0
-> will release on 2019-08-12
+> release on 2019-08-12
 
 New feature:
 1. Add encryption and decryption to config file
