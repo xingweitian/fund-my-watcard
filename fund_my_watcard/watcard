@@ -242,7 +242,7 @@ if __name__ == "__main__":
             report_error("Cannot find config file under user directory, try 'watcard --config'.")
 
     if args.version:
-        print("fund-my-watcard v{}".format("0.2.1"))
+        print("fund-my-watcard v{}".format("0.3.0"))
 
     if args.encrypt:
         if query_yes_no(PRINT_PREFIX + "This will encrypt your config file! Do you want to proceed?", "no"):
