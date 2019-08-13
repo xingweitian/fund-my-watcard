@@ -1,6 +1,8 @@
 from setuptools import setup, find_packages
 
-from fund_my_watcard.config import VERSION
+from importlib.machinery import SourceFileLoader
+
+VERSION = SourceFileLoader("version", "src/fund_my_watcard/version.py").load_module().VERSION
 
 with open("requirements.txt") as f:
     requirements = [_.strip() for _ in f.readlines() if _]
@@ -11,11 +13,12 @@ with open("README.md", encoding="utf-8") as f:
 setup(
     name="fund-my-watcard",
     version=VERSION,
-    packages=find_packages("fund_my_watcard"),
+    packages=find_packages("src"),
+    package_dir={"": "src"},
     python_requires=">=3.5",
-    scripts=["fund_my_watcard/watcard"],
+    entry_points={"console_scripts": ["watcard = fund_my_watcard.main:main"]},
     install_requires=requirements,
-    author="xingweitian",
+    author="xingweitian, faushine, KevinLu",
     author_email="xingweitian@gmail.com",
     description="A tool to fund WatCard in an easy way",
     long_description_content_type="text/markdown",
