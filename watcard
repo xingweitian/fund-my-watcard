@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 import sys
-import fund_my_watcard
+import os
+
+_src_dir = "%s/src/" % os.path.dirname(os.path.realpath(__file__))
+_file_path = os.path.dirname(sys.argv[0])
+sys.path.append(os.path.join(_file_path, _src_dir))
+
 
 if sys.version_info[0] == 3:
 
     if __name__ == "__main__":
-        fund_my_watcard.main()
+        from fund_my_watcard import main
+
+        main()
 else:
 
-    fund_my_watcard.report_error("Python3 is required, try to run this script by using 'python3 watcard'.")
+    print("Python3 is required, try to run this script by using 'python3 watcard'.")
