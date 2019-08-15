@@ -5,7 +5,16 @@ import os
 from cryptography.fernet import Fernet
 
 from .version import VERSION
-from .util import report_error, report_message, PRINT_PREFIX, query_yes_no, encrypt_password, input_and_encrypt_password
+from .util import (
+    report_error,
+    report_message,
+    report_success,
+    report_warning,
+    report_fail,
+    PRINT_PREFIX,
+    query_yes_no,
+    input_and_encrypt_password,
+)
 from .mywatcard import MyWatCard
 from .config_file import (
     CONFIG_FILE_PATH,
@@ -13,6 +22,19 @@ from .config_file import (
     reset_config_file,
     decrypt_config_file,
     encrypt_config_file,
+)
+from .messages import (
+    CAN_NOT_FIND_CONFIG_FILE,
+    CONFIG_FILE_HAS_BEEN_ENCRYPTED,
+    ADDING_FUND_FAILED,
+    ADDING_FUND_SUCCESSFULLY,
+    WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING,
+    WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING,
+    WILL_RESET_YOUR_CONFIG_FILE_WARNING,
+    IS_ALREADY_DECRYPTED,
+    IS_ALREADY_ENCRYPTED,
+    CONFIG_FILE_SUCCESSFULLY_DECRYPTED,
+    CONFIG_FILE_SUCCESSFULLY_ENCRYPTED,
 )
 
 
@@ -38,62 +60,62 @@ def main():
             with open(CONFIG_FILE_PATH) as f:
                 _config = json.load(f)
             if _config["encrypted"] != "False":
-                report_message("Config file has been encrypted, needs to be decrypted at first.")
+                report_warning(CONFIG_FILE_HAS_BEEN_ENCRYPTED)
                 f = Fernet(input_and_encrypt_password())
                 decrypt_config_file(_config, f)
             _my_wat_card = MyWatCard(**_config)
             res = _my_wat_card.add_fund(amount)
             if res:
-                report_message("Adding ${} to account {} successfully.".format(amount, _config["userName"]))
+                report_success(ADDING_FUND_SUCCESSFULLY.format(amount, _config["userName"]))
             else:
-                report_message("Adding ${} to account {} failed.".format(amount, _config["userName"]))
+                report_fail(ADDING_FUND_FAILED.format(amount, _config["userName"]))
         else:
-            report_error("Cannot find config file under user directory, try 'watcard --config'.")
+            report_error(CAN_NOT_FIND_CONFIG_FILE)
 
     if args.version:
-        print("fund-my-watcard v{}".format(VERSION))
+        report_message("v{}".format(VERSION))
 
     if args.encrypt:
-        if query_yes_no(PRINT_PREFIX + "This will encrypt your config file! Do you want to proceed?", "no"):
+        if query_yes_no(PRINT_PREFIX + WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
             else:
-                report_error("Cannot find config file under user directory, try 'watcard --config'.")
+                report_error(CAN_NOT_FIND_CONFIG_FILE)
 
             if _config["encrypted"] != "False":
-                report_message("Your config file is already encrypted. To decrypt it, please try 'watcard -d'.")
+                report_warning(IS_ALREADY_ENCRYPTED)
             else:
                 if os.path.isfile(CONFIG_FILE_PATH):
                     with open(CONFIG_FILE_PATH) as f:
                         _config = json.load(f)
                 else:
-                    report_error("Cannot find config file under user directory, try 'watcard --config'.")
+                    report_error(CAN_NOT_FIND_CONFIG_FILE)
 
-                f = Fernet(encrypt_password(input(PRINT_PREFIX + "Please input your password: ").encode()))
+                f = Fernet(input_and_encrypt_password())
                 _encrypted_config_info = encrypt_config_file(_config, f)
 
                 with open(CONFIG_FILE_PATH, "w+") as json_file:
                     json.dump(_encrypted_config_info, json_file, indent=2)
 
-                report_message("Config file successfully encrypted.")
+                report_success(CONFIG_FILE_SUCCESSFULLY_ENCRYPTED)
 
     if args.decrypt:
-        if query_yes_no(PRINT_PREFIX + "This will decrypt your config file! Do you want to proceed?", "no"):
+        if query_yes_no(PRINT_PREFIX + WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
             else:
-                report_error("Cannot find config file under user directory, try 'watcard --config'.")
+                report_error(CAN_NOT_FIND_CONFIG_FILE)
 
             if _config["encrypted"] == "False":
-                report_message("Your config file is already decrypted. To encrypt it, please use 'watcard -e'.")
+                report_warning(IS_ALREADY_DECRYPTED)
             else:
                 if os.path.isfile(CONFIG_FILE_PATH):
                     with open(CONFIG_FILE_PATH) as f:
                         _config = json.load(f)
                 else:
-                    report_error("Cannot find config file under user directory, try 'watcard --config'.")
+                    report_error(CAN_NOT_FIND_CONFIG_FILE)
 
                 f = Fernet(input_and_encrypt_password())
                 _decrypted_config_info = decrypt_config_file(_config, f)
@@ -101,10 +123,10 @@ def main():
                 with open(CONFIG_FILE_PATH, "w+") as json_file:
                     json.dump(_decrypted_config_info, json_file, indent=2)
 
-                report_message("Config file successfully decrypted.")
+                report_success(CONFIG_FILE_SUCCESSFULLY_DECRYPTED)
 
     if args.reset:
-        if query_yes_no(PRINT_PREFIX + "This will reset your config file! Do you want to proceed?", "no"):
+        if query_yes_no(PRINT_PREFIX + WILL_RESET_YOUR_CONFIG_FILE_WARNING, "no"):
             reset_config_file()
 
     if not (args.config or args.fund or args.version or args.encrypt or args.decrypt or args.reset):
