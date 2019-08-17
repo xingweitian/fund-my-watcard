@@ -1,7 +1,10 @@
 ### Version 0.3.1
 > release on 2019-08-16
 
-Improve the message display
+New feature:
+1. Refactor the code
+2. Add another python file as the console script
+3. Improve the message display
 
 ### Version 0.3.0
 > release on 2019-08-12
