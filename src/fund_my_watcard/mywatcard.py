@@ -4,7 +4,7 @@ from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 
-from .util import report_message
+from .util import report_fail
 
 
 class MyWatCard:
@@ -64,7 +64,7 @@ class MyWatCard:
                 if browser.find_by_text("Funds were added to your card.").first is not None:
                     return True
         except Exception as e:
-            report_message(str(e))
+            report_fail(str(e))
             return False
 
     def check_balance(self):

@@ -1,4 +1,5 @@
 import base64
+import getpass
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -7,13 +8,33 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 PRINT_PREFIX = "[fund-my-watcard] "
 
 
-def report_error(msg: str):
-    print(PRINT_PREFIX + msg)
+class BColors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+
+
+def report_error(msg):
+    print(BColors.FAIL + PRINT_PREFIX + msg + BColors.ENDC)
     exit(1)
 
 
-def report_message(msg: str):
-    print(PRINT_PREFIX + msg)
+def report_message(msg):
+    print(PRINT_PREFIX + msg + BColors.ENDC)
+
+
+def report_warning(msg):
+    print(BColors.WARNING + PRINT_PREFIX + msg + BColors.ENDC)
+
+
+def report_success(msg):
+    print(BColors.OKBLUE + PRINT_PREFIX + msg + BColors.ENDC)
+
+
+def report_fail(msg):
+    print(BColors.FAIL + PRINT_PREFIX + msg + BColors.ENDC)
 
 
 def query_yes_no(question, default="yes"):
@@ -38,18 +59,18 @@ def query_yes_no(question, default="yes"):
         raise ValueError("invalid default answer: '%s'" % default)
 
     while True:
-        print(question + prompt)
+        report_warning(question + prompt)
         choice = input().lower()
         if default is not None and choice == "":
             return valid[default]
         elif choice in valid:
             return valid[choice]
         else:
-            print("Please respond with 'yes' or 'no' (or 'y' or 'n').\n")
+            report_warning("Please respond with 'yes' or 'no' (or 'y' or 'n').")
 
 
 def input_and_encrypt_password():
-    return encrypt_password(input(PRINT_PREFIX + "Please input your password: ").encode())
+    return encrypt_password(getpass.getpass(PRINT_PREFIX + "Please input your password: ").encode())
 
 
 def encrypt_password(password):

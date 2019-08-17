@@ -6,7 +6,15 @@ import json
 
 from cryptography.fernet import InvalidToken, Fernet
 
-from .util import report_message, report_error
+from .util import report_error, report_warning, report_success
+from .messages import (
+    CONFIG_FILE_ALREADY_EXISTS,
+    OPENING_CONFIG_FILE,
+    GENERATE_CONFIG_FILE_SUCCESSFULLY,
+    RESET_CONFIG_FILE_SUCCESSFULLY,
+    INVALID_PASSWORD,
+    DECRYPTING_CONFIG_FILE_FAILED,
+)
 
 CONFIG_FILE_PATH = os.path.expanduser("~") + "/.watcard_config"
 
@@ -23,25 +31,26 @@ def open_config_file():
 
 def generate_config_file():
     if os.path.isfile(CONFIG_FILE_PATH):
-        report_message("Config file '.watcard_config' already exists.")
-        report_message("Opening " + CONFIG_FILE_PATH + ".")
+        report_warning(CONFIG_FILE_ALREADY_EXISTS)
+        report_warning(OPENING_CONFIG_FILE.format(CONFIG_FILE_PATH))
         time.sleep(1)
         open_config_file()
         return
 
     write_template_to_config_file()
-    report_message("Generate config file at user directory successfully. Please fill your information.")
-    report_message("Opening " + CONFIG_FILE_PATH + ".")
+    report_success(GENERATE_CONFIG_FILE_SUCCESSFULLY)
+    report_success(OPENING_CONFIG_FILE.format(CONFIG_FILE_PATH))
     time.sleep(1)
     open_config_file()
 
 
 def reset_config_file():
     write_template_to_config_file()
-    report_message("Reset config file successfully. Try 'watcard --config' to fill your information.")
+    report_success(RESET_CONFIG_FILE_SUCCESSFULLY)
 
 
 def write_template_to_config_file():
+    # TODO Read the template from a json file.
     _config_info = {
         "userName": "WatIAM username",
         "password": "WatIAM username",
@@ -76,7 +85,7 @@ def decrypt_config_file(config: dict, f: Fernet) -> dict:
     try:
         f.decrypt(config["encrypted"].encode())
     except InvalidToken:
-        report_error("Invalid password. Decrypting config file failed.")
+        report_error(" ".join([INVALID_PASSWORD, DECRYPTING_CONFIG_FILE_FAILED]))
     for k, v in config.items():
         config[k] = f.decrypt(v.encode()).decode("utf8")
     return config
