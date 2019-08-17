@@ -1,7 +1,7 @@
 import time
 
 from splinter import Browser
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 from selenium import webdriver
 
 from .util import report_fail
@@ -29,12 +29,12 @@ class MyWatCard:
 
     def add_fund(self, amount):
         try:
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_argument("--incognito")
+            firefox_options = webdriver.FirefoxOptions()
+            # firefox_options.add_argument("--headless")
+            # firefox_options.add_argument("--no-sandbox")
+            # firefox_options.add_argument("--incognito")
             with Browser(
-                "chrome", **{"executable_path": ChromeDriverManager().install()}, options=chrome_options
+                "firefox", **{"executable_path": GeckoDriverManager().install()}, options=firefox_options
             ) as browser:
                 browser.visit("https://watcard.uwaterloo.ca/OneWebUW/addfunds_watiam.asp")
                 browser.fill("UserName", self.userName)
