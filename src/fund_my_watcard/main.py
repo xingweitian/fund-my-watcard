@@ -36,9 +36,12 @@ from .messages import (
     CONFIG_FILE_SUCCESSFULLY_DECRYPTED,
     CONFIG_FILE_SUCCESSFULLY_ENCRYPTED,
 )
+from .logger import init_logger
+from .transaction import print_transaction
 
 
 def main():
+    logfile = init_logger()
     parser = argparse.ArgumentParser(description="Fund my WatCard: A tool that add funds to your WatCard easily.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--config", help="generate the config file", action="store_true")
@@ -49,7 +52,12 @@ def main():
     )
     group.add_argument("-d", "--decrypt", help="decrypt the config file so you can edit it", action="store_true")
     group.add_argument("-r", "--reset", help="reset the config file", action="store_true")
+    group.add_argument("-t", "--transaction", help="review previous transactions", action="store_true")
     args = parser.parse_args()
+
+    if args.transaction:
+        print_transaction(logfile)
+        return
 
     if args.config:
         generate_config_file()

@@ -1,40 +1,30 @@
 import base64
 import getpass
-
+import logging
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-PRINT_PREFIX = "[fund-my-watcard] "
+logger = logging.getLogger("logger")
 
-
-class BColors:
-    HEADER = "\033[95m"
-    OKBLUE = "\033[94m"
-    WARNING = "\033[93m"
-    FAIL = "\033[91m"
-    ENDC = "\033[0m"
-
+PRINT_PREFIX = "[fund-my-watcard]"
 
 def report_error(msg):
-    print(BColors.FAIL + PRINT_PREFIX + msg + BColors.ENDC)
+    logger.error(msg)
     exit(1)
 
 
 def report_message(msg):
-    print(PRINT_PREFIX + msg + BColors.ENDC)
-
+    logger.info(msg)
 
 def report_warning(msg):
-    print(BColors.WARNING + PRINT_PREFIX + msg + BColors.ENDC)
-
+    logger.warning(msg)
 
 def report_success(msg):
-    print(BColors.OKBLUE + PRINT_PREFIX + msg + BColors.ENDC)
-
+    logger.success(msg)
 
 def report_fail(msg):
-    print(BColors.FAIL + PRINT_PREFIX + msg + BColors.ENDC)
+    logger.error(msg)
 
 
 def query_yes_no(question, default="yes"):
