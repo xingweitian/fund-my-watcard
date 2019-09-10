@@ -9,6 +9,7 @@ logger = logging.getLogger("logger")
 
 PRINT_PREFIX = "[fund-my-watcard]"
 
+
 def report_error(msg):
     logger.error(msg)
     exit(1)
@@ -17,11 +18,14 @@ def report_error(msg):
 def report_message(msg):
     logger.info(msg)
 
+
 def report_warning(msg):
     logger.warning(msg)
 
+
 def report_success(msg):
     logger.success(msg)
+
 
 def report_fail(msg):
     logger.error(msg)
@@ -60,7 +64,7 @@ def query_yes_no(question, default="yes"):
 
 
 def input_and_encrypt_password():
-    return encrypt_password(getpass.getpass(PRINT_PREFIX + "Please input your password: ").encode())
+    return encrypt_password(getpass.getpass(PRINT_PREFIX + " Please input your password: ").encode())
 
 
 def encrypt_password(password):

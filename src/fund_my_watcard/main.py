@@ -11,7 +11,6 @@ from .util import (
     report_success,
     report_warning,
     report_fail,
-    PRINT_PREFIX,
     query_yes_no,
     input_and_encrypt_password,
 )
@@ -84,7 +83,7 @@ def main():
         report_message("v{}".format(VERSION))
 
     if args.encrypt:
-        if query_yes_no(PRINT_PREFIX + WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
+        if query_yes_no(WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
@@ -109,7 +108,7 @@ def main():
                 report_success(CONFIG_FILE_SUCCESSFULLY_ENCRYPTED)
 
     if args.decrypt:
-        if query_yes_no(PRINT_PREFIX + WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
+        if query_yes_no(WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
@@ -134,7 +133,7 @@ def main():
                 report_success(CONFIG_FILE_SUCCESSFULLY_DECRYPTED)
 
     if args.reset:
-        if query_yes_no(PRINT_PREFIX + WILL_RESET_YOUR_CONFIG_FILE_WARNING, "no"):
+        if query_yes_no(WILL_RESET_YOUR_CONFIG_FILE_WARNING, "no"):
             reset_config_file()
 
     if not (args.config or args.fund or args.version or args.encrypt or args.decrypt or args.reset):
