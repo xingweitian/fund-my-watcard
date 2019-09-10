@@ -80,7 +80,9 @@ def main():
             report_error(CAN_NOT_FIND_CONFIG_FILE)
 
     if args.version:
-        report_message("v{}".format(VERSION))
+        from .util import PRINT_PREFIX
+
+        print(PRINT_PREFIX + " v{}".format(VERSION))
 
     if args.encrypt:
         if query_yes_no(WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING, "no"):

@@ -23,7 +23,7 @@ def init_logger():
     # create file handler and set level to INFO
     logfile = CONFIG_FILE_PATH.replace("config", "log")
     fh = logging.FileHandler(logfile)
-    fh.setLevel(logging.INFO)
+    fh.setLevel(SUCCESS)
 
     # create stream handler and set level to INFO
     sh = logging.StreamHandler()
