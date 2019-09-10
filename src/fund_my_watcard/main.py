@@ -5,15 +5,7 @@ import os
 from cryptography.fernet import Fernet
 
 from .version import VERSION
-from .util import (
-    report_error,
-    report_message,
-    report_success,
-    report_warning,
-    report_fail,
-    query_yes_no,
-    input_and_encrypt_password,
-)
+from .util import report_error, report_success, report_warning, report_fail, query_yes_no, input_and_encrypt_password
 from .mywatcard import MyWatCard
 from .config_file import (
     CONFIG_FILE_PATH,
