@@ -1,6 +1,6 @@
 import logging
 import colorlog
-from .config_file import CONFIG_FILE_PATH
+from .config_file import WATCARD_PATH
 from .util import PRINT_PREFIX
 
 # add new level - SUCCESS
@@ -21,7 +21,7 @@ def init_logger():
     logger.setLevel(logging.INFO)
 
     # create file handler and set level to INFO
-    logfile = CONFIG_FILE_PATH.replace("config", "log")
+    logfile = WATCARD_PATH + "/.watcard_log"
     fh = logging.FileHandler(logfile)
     fh.setLevel(SUCCESS)
 
