@@ -27,7 +27,7 @@ from .messages import (
     CONFIG_FILE_SUCCESSFULLY_DECRYPTED,
     CONFIG_FILE_SUCCESSFULLY_ENCRYPTED,
 )
-from .logger import init_logger
+from .log import init_logger
 from .transaction import print_transaction
 
 

@@ -16,8 +16,8 @@ from .messages import (
     DECRYPTING_CONFIG_FILE_FAILED,
 )
 
-WATCARD_PATH = os.path.expanduser("~")
-CONFIG_FILE_PATH = WATCARD_PATH + "/.watcard_config"
+USER_DIR = os.path.expanduser("~")
+CONFIG_FILE_PATH = USER_DIR + "/.watcard_config"
 
 
 def open_config_file():
