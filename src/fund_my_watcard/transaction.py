@@ -2,7 +2,7 @@ import prettytable
 import re
 
 
-def print_transaction(logfile):
+def print_transactions(logfile):
     table = prettytable.PrettyTable(["Date", "Account", "Fund", "Status"])
     with open(logfile, "r") as f:
         for line in f.readlines():

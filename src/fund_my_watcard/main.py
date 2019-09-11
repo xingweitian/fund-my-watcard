@@ -28,7 +28,7 @@ from .messages import (
     CONFIG_FILE_SUCCESSFULLY_ENCRYPTED,
 )
 from .log import init_logger
-from .transaction import print_transaction
+from .transaction import print_transactions
 
 
 def main():
@@ -47,7 +47,7 @@ def main():
     args = parser.parse_args()
 
     if args.transaction:
-        print_transaction(logfile)
+        print_transactions(logfile)
         return
 
     if args.config:
