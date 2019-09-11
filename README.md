@@ -95,7 +95,7 @@ https://hub.docker.com/r/faushine/fund-my-watcard
 Pull image from docker-hub: 
    
 ```bash
- docker pull faushine/fund-my-watcard:0.2.1
+ docker pull faushine/fund-my-watcard:0.3.1
  ```
 
 Create and edit `.watcard_config` (There is a template of `.watcard_config` in the folder `docker`, you may want to edit it directly). 
@@ -103,7 +103,7 @@ Create and edit `.watcard_config` (There is a template of `.watcard_config` in t
 Run container and mount configuration to the container:
    
 ```bash
-docker run -it  -v /absolute/path/of/.watcard_config:/root/.watcard_config faushine/fund-my-watcard:0.2.1
+docker run -it  -v /absolute/path/of/.watcard_config:/root/.watcard_config faushine/fund-my-watcard:0.3.1
 ```
 
 
