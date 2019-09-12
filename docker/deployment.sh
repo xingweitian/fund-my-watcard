@@ -1,4 +1,5 @@
 #!/bin/sh
+# fill in this configuration before run.
 VERSION=""
 USERNAME=""
 

@@ -28,6 +28,7 @@ optional arguments:
   -e, --encrypt         encrypt the config file with user defined password
   -d, --decrypt         decrypt the config file so you can edit it
   -r, --reset           reset the config file
+  -t, --transactions    review the previous transactions
 ```
 
 One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initialize and edit the config file.
