@@ -1,6 +1,9 @@
 ### Version 0.4.0
 > will release on 2019-09-16
 
+New features:
+1. Add log to see the history of adding funds.
+
 ### Version 0.3.1
 > release on 2019-08-16
 
