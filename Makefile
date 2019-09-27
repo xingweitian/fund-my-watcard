@@ -15,7 +15,7 @@ check_format:
 
 
 clean:
-		rm -rf build dist .pytest_cache
+		rm -rf build dist .pytest_cache src/*.egg-info
 
 
 package:
