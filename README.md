@@ -114,7 +114,7 @@ docker run -it  -v /absolute/path/of/.watcard_config:/root/.watcard_config faush
 
 ## Contributing
 
-Please install `dev-requirements.txt` instead of `requirements.txt`. After that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
+Please install `dev-requirements.txt` instead of `requirements.txt`. After that, run `make init` to install the pre-commit hook to force PEP8 style checking.
 
 ## Plan
 
