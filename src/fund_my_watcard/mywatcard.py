@@ -1,4 +1,6 @@
 import time
+import re
+
 
 from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
@@ -74,4 +76,57 @@ class MyWatCard:
             return False
 
     def check_balance(self):
-        pass
+        try:
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('--headless') #设置为headless模式
+            chrome_options.add_argument('--no-sandbox') #彻底停用沙箱
+            chrome_options.add_argument('--incognito') #让浏览器直接以隐身的模式启动
+            with Browser("chrome", **{"executable_path": ChromeDriverManager().install()},
+                         options=chrome_options) as browser:
+                browser.visit("https://watcard.uwaterloo.ca/OneWeb/Account/LogOn")
+                browser.fill("Account", self.watcardAccount)
+                browser.fill("Password", self.PIN)
+                buttonLog = browser.find_link_by_text("Log On")
+                buttonLog.click()
+                time.sleep(2)
+
+                buttonBal = browser.find_link_by_text("Balances")
+                buttonBal.click()
+                time.sleep(2)
+                reg = re.compile('<div id="body" class="body">.*?<div id="main" class="main">.*?<div class="container ow-main-container">.*?\
+                                 <div class ="ow-content-wrapper">.*?<div class ="co-md-9">.*?<div class="ow-container-holder">.*?\
+                                   <div class="ow-summary-panel">.*?<span class="pull-right" style="float:right;">(.*?)</span>', re.S)
+                balance = re.findall(reg, html)
+
+
+                # browser.fill("ordName", self.ordName)
+                # browser.fill("ordPhoneNumber", self.phoneNumber)
+                # browser.fill("ordAddress1", self.ordAddress1)
+                # if self.ordAddress2 is not None:
+                #     browser.fill("ordAddress2", self.ordAddress2)
+                # browser.fill("ordCity", self.ordCity)
+                # browser.fill("ordPostalCode", self.ordPostalCode)
+                # browser.fill("ordEmailAddress", self.ordEmailAddress)
+                # browser.fill("trnAmount", str(amount))
+                # browser.find_by_name("paymentMethod").first.select(self.paymentMethod)
+                # browser.fill("trnCardOwner", self.trnCardOwner)
+                # browser.find_by_name("trnCardType").first.select(self.trnCardType)
+                # browser.fill("trnCardNumber", self.trnCardNumber)
+                # browser.find_by_name("trnExpMonth").first.select(self.trnExpMonth)
+                # browser.find_by_name("trnExpYear").first.select(self.trnExpYear)
+                # browser.fill("trnCardCvd", self.trnCardCvd)
+                button = browser.find_link_by_text("Balances")
+
+
+
+                # if browser.find_by_text("Funds were added to your card.").first is not None:
+                #     return True
+        except Exception as e:
+            print(str(e))
+            return False
+
+
+
+
+
+
