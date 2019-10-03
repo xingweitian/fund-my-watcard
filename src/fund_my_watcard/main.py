@@ -35,6 +35,7 @@ from .messages import (
     IS_ALREADY_ENCRYPTED,
     CONFIG_FILE_SUCCESSFULLY_DECRYPTED,
     CONFIG_FILE_SUCCESSFULLY_ENCRYPTED,
+    INVALID_CONFIG_FILE,
 )
 
 
@@ -49,6 +50,8 @@ def main():
     )
     group.add_argument("-d", "--decrypt", help="decrypt the config file so you can edit it", action="store_true")
     group.add_argument("-r", "--reset", help="reset the config file", action="store_true")
+    group.add_argument("-va", "--valid", help="check if the config file is valid", action="store_true")
+
     args = parser.parse_args()
 
     if args.config:
@@ -57,18 +60,21 @@ def main():
     if args.fund:
         amount = round(args.fund, 2)
         if os.path.isfile(CONFIG_FILE_PATH):
-            with open(CONFIG_FILE_PATH) as f:
-                _config = json.load(f)
-            if _config["encrypted"] != "False":
-                report_warning(CONFIG_FILE_HAS_BEEN_ENCRYPTED)
-                f = Fernet(input_and_encrypt_password())
-                decrypt_config_file(_config, f)
-            _my_wat_card = MyWatCard(**_config)
-            res = _my_wat_card.add_fund(amount)
-            if res:
-                report_success(ADDING_FUND_SUCCESSFULLY.format(amount, _config["userName"]))
-            else:
-                report_fail(ADDING_FUND_FAILED.format(amount, _config["userName"]))
+            try:
+                with open(CONFIG_FILE_PATH) as f:
+                    _config = json.load(f)
+                if _config["encrypted"] != "False":
+                    report_warning(CONFIG_FILE_HAS_BEEN_ENCRYPTED)
+                    f = Fernet(input_and_encrypt_password())
+                    decrypt_config_file(_config, f)
+                _my_wat_card = MyWatCard(**_config)
+                res = _my_wat_card.add_fund(amount)
+                if res:
+                    report_success(ADDING_FUND_SUCCESSFULLY.format(amount, _config["userName"]))
+                else:
+                    report_fail(ADDING_FUND_FAILED.format(amount, _config["userName"]))
+            except json.decoder.JSONDecodeError:
+                report_fail(INVALID_CONFIG_FILE)
         else:
             report_error(CAN_NOT_FIND_CONFIG_FILE)
 

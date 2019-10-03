@@ -15,3 +15,4 @@ GENERATE_CONFIG_FILE_SUCCESSFULLY = "Generate config file at user directory succ
 RESET_CONFIG_FILE_SUCCESSFULLY = "Reset config file successfully. Try 'watcard --config' to fill your information."
 DECRYPTING_CONFIG_FILE_FAILED = "Decrypting config file failed."
 INVALID_PASSWORD = "Invalid password."
+INVALID_CONFIG_FILE = "Invalid config file. Try 'watcard --valid' to check if your config file is valid."
