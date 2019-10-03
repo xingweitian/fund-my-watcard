@@ -1,10 +1,9 @@
 #!/bin/sh
-# fill in this configuration before run.
-VERSION=""
-USERNAME=""
 
-# build from docker file
-cd docker
+set -e
+
+VERSION=$1
+USERNAME="faushine"
 
 docker build --no-cache -t $USERNAME/fund-my-watcard:$VERSION .
 
