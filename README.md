@@ -28,6 +28,7 @@ optional arguments:
   -e, --encrypt         encrypt the config file with user defined password
   -d, --decrypt         decrypt the config file so you can edit it
   -r, --reset           reset the config file
+  -t, --transactions    review the previous transactions
 ```
 
 One important step before funding is to fill the config file **.watcard_config**, which is generated and stored under the user directory. Type `watcard --config` to initialize and edit the config file.
@@ -44,6 +45,8 @@ An example of **.watcard_config**:
   "address2": "Home address 2 (Blank if no address2)",
   "ordPostalCode": "Postal code",
   "ordCity": "City",
+  "ordCountry": "Country (Canada by default)",
+  "ordProvince": "Province (Ontario by default)",
   "ordEmailAddress": "Email address",
   "paymentMethod": "Payment method ('CC' for 'Credit Card')",
   "trnCardOwner": "Card owner",
@@ -68,6 +71,8 @@ An example of filled **.watcard_config**:
   "address2": "",
   "ordPostalCode": "A1B2C3",
   "ordCity": "Waterloo",
+  "ordCountry": "Canada",
+  "ordProvince": "Ontario",
   "ordEmailAddress": "zhangsan@gmail.com",
   "paymentMethod": "CC",
   "trnCardOwner": "San Zhang",
@@ -95,7 +100,7 @@ https://hub.docker.com/r/faushine/fund-my-watcard
 Pull image from docker-hub: 
    
 ```bash
- docker pull faushine/fund-my-watcard:0.2.1
+ docker pull faushine/fund-my-watcard:0.4.1
  ```
 
 Create and edit `.watcard_config` (There is a template of `.watcard_config` in the folder `docker`, you may want to edit it directly). 
@@ -103,13 +108,13 @@ Create and edit `.watcard_config` (There is a template of `.watcard_config` in t
 Run container and mount configuration to the container:
    
 ```bash
-docker run -it  -v /absolute/path/of/.watcard_config:/root/.watcard_config faushine/fund-my-watcard:0.2.1
+docker run -it  -v /absolute/path/of/.watcard_config:/root/.watcard_config faushine/fund-my-watcard:0.3.1
 ```
 
 
 ## Contributing
 
-Please install `dev-requirements.txt` instead of `requirements.txt`. After that, run `dev-init.sh` to install the pre-commit hook to force PEP8 style checking.
+Please install `dev-requirements.txt` instead of `requirements.txt`. After that, run `make init` to install the pre-commit hook to force PEP8 style checking.
 
 ## Plan
 

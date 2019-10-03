@@ -6,6 +6,8 @@ from selenium import webdriver
 
 from .util import report_fail
 
+card_type = {"VI": "VISA", "PV": "VISA Debit", "MC": "MasterCard", "MD": "Debit MasterCard", "AM": "AMEX"}
+
 
 class MyWatCard:
     def __init__(self, **kwargs):
@@ -16,6 +18,8 @@ class MyWatCard:
         self.ordAddress1 = kwargs["address1"]
         self.ordAddress2 = None if len(kwargs["address2"]) == 0 else kwargs["address2"]
         self.ordCity = kwargs["ordCity"]
+        self.ordProvince = "Ontario" if "ordProvince" not in kwargs else kwargs["ordProvince"]
+        self.ordCountry = "Canada" if "ordCountry" not in kwargs else kwargs["ordCountry"]
         self.ordPostalCode = kwargs["ordPostalCode"]
         self.ordEmailAddress = kwargs["ordEmailAddress"]
         self.paymentMethod = kwargs["paymentMethod"]
@@ -54,11 +58,13 @@ class MyWatCard:
                 browser.fill("trnAmount", str(amount))
                 browser.find_by_name("paymentMethod").first.select(self.paymentMethod)
                 browser.fill("trnCardOwner", self.trnCardOwner)
-                browser.find_by_name("trnCardType").first.select(self.trnCardType)
+                browser.find_option_by_text(card_type[self.trnCardType]).first.click()
                 browser.fill("trnCardNumber", self.trnCardNumber)
                 browser.find_by_name("trnExpMonth").first.select(self.trnExpMonth)
                 browser.find_by_name("trnExpYear").first.select(self.trnExpYear)
                 browser.fill("trnCardCvd", self.trnCardCvd)
+                browser.find_option_by_text(self.ordCountry).first.click()
+                browser.find_option_by_text(self.ordProvince).first.click()
                 button = browser.find_by_name("submitButton")
                 button.click()
                 if browser.find_by_text("Funds were added to your card.").first is not None:

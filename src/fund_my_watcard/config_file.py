@@ -16,7 +16,8 @@ from .messages import (
     DECRYPTING_CONFIG_FILE_FAILED,
 )
 
-CONFIG_FILE_PATH = os.path.expanduser("~") + "/.watcard_config"
+USER_DIR = os.path.expanduser("~")
+CONFIG_FILE_PATH = USER_DIR + "/.watcard_config"
 
 
 def open_config_file():
@@ -60,6 +61,8 @@ def write_template_to_config_file():
         "address2": "Home address 2 (Blank if no address2)",
         "ordPostalCode": "Postal code",
         "ordCity": "City",
+        "ordCountry": "Country (Canada by default)",
+        "ordProvince": "Province (Ontario by default)",
         "ordEmailAddress": "Email address",
         "paymentMethod": "Payment method ('CC' for 'Credit Card')",
         "trnCardOwner": "Card owner",

@@ -5,16 +5,7 @@ import os
 from cryptography.fernet import Fernet
 
 from .version import VERSION
-from .util import (
-    report_error,
-    report_message,
-    report_success,
-    report_warning,
-    report_fail,
-    PRINT_PREFIX,
-    query_yes_no,
-    input_and_encrypt_password,
-)
+from .util import report_error, report_success, report_warning, report_fail, query_yes_no, input_and_encrypt_password
 from .mywatcard import MyWatCard
 from .config_file import (
     CONFIG_FILE_PATH,
@@ -37,9 +28,12 @@ from .messages import (
     CONFIG_FILE_SUCCESSFULLY_ENCRYPTED,
     INVALID_CONFIG_FILE,
 )
+from .log import init_logger
+from .transaction import print_transactions
 
 
 def main():
+    logfile = init_logger()
     parser = argparse.ArgumentParser(description="Fund my WatCard: A tool that add funds to your WatCard easily.")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--config", help="generate the config file", action="store_true")
@@ -51,13 +45,16 @@ def main():
     group.add_argument("-d", "--decrypt", help="decrypt the config file so you can edit it", action="store_true")
     group.add_argument("-r", "--reset", help="reset the config file", action="store_true")
     group.add_argument("-va", "--valid", help="check if the config file is valid", action="store_true")
-
+    group.add_argument("-t", "--transaction", help="review previous transactions", action="store_true")
     args = parser.parse_args()
 
-    if args.config:
+    if args.transaction:
+        print_transactions(logfile)
+
+    elif args.config:
         generate_config_file()
 
-    if args.fund:
+    elif args.fund:
         amount = round(args.fund, 2)
         if os.path.isfile(CONFIG_FILE_PATH):
             try:
@@ -77,12 +74,13 @@ def main():
                 report_fail(INVALID_CONFIG_FILE)
         else:
             report_error(CAN_NOT_FIND_CONFIG_FILE)
+    elif args.version:
+        from .util import PRINT_PREFIX
 
-    if args.version:
-        report_message("v{}".format(VERSION))
+        print(PRINT_PREFIX + " v{}".format(VERSION))
 
-    if args.encrypt:
-        if query_yes_no(PRINT_PREFIX + WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
+    elif args.encrypt:
+        if query_yes_no(WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
@@ -106,8 +104,8 @@ def main():
 
                 report_success(CONFIG_FILE_SUCCESSFULLY_ENCRYPTED)
 
-    if args.decrypt:
-        if query_yes_no(PRINT_PREFIX + WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
+    elif args.decrypt:
+        if query_yes_no(WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
@@ -131,9 +129,9 @@ def main():
 
                 report_success(CONFIG_FILE_SUCCESSFULLY_DECRYPTED)
 
-    if args.reset:
-        if query_yes_no(PRINT_PREFIX + WILL_RESET_YOUR_CONFIG_FILE_WARNING, "no"):
+    elif args.reset:
+        if query_yes_no(WILL_RESET_YOUR_CONFIG_FILE_WARNING, "no"):
             reset_config_file()
 
-    if not (args.config or args.fund or args.version or args.encrypt or args.decrypt or args.reset):
+    else:
         parser.parse_args(["-h"])

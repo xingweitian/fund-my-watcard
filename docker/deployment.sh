@@ -1,12 +1,12 @@
 #!/bin/sh
-VERSION=""
-USERNAME=""
 
-# build from docker file
-cd docker
+set -e
 
-docker build --no-cache -t $USERNAME/fund-my-watcard:$VERSION .
+VERSION=$1
+USERNAME="faushine"
 
-docker push $USERNAME/fund-my-watcard:$VERSION
+docker build --no-cache -t $USERNAME/fund-my-watcard:"$VERSION" .
+
+docker push $USERNAME/fund-my-watcard:"$VERSION"
 
 exit
