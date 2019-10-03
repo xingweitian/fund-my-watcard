@@ -48,12 +48,11 @@ def main():
 
     if args.transaction:
         print_transactions(logfile)
-        return
 
-    if args.config:
+    elif args.config:
         generate_config_file()
 
-    if args.fund:
+    elif args.fund:
         amount = round(args.fund, 2)
         if os.path.isfile(CONFIG_FILE_PATH):
             with open(CONFIG_FILE_PATH) as f:
@@ -70,13 +69,12 @@ def main():
                 report_fail(ADDING_FUND_FAILED.format(amount, _config["userName"]))
         else:
             report_error(CAN_NOT_FIND_CONFIG_FILE)
-
-    if args.version:
+    elif args.version:
         from .util import PRINT_PREFIX
 
         print(PRINT_PREFIX + " v{}".format(VERSION))
 
-    if args.encrypt:
+    elif args.encrypt:
         if query_yes_no(WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
@@ -101,7 +99,7 @@ def main():
 
                 report_success(CONFIG_FILE_SUCCESSFULLY_ENCRYPTED)
 
-    if args.decrypt:
+    elif args.decrypt:
         if query_yes_no(WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING, "no"):
             if os.path.isfile(CONFIG_FILE_PATH):
                 with open(CONFIG_FILE_PATH) as f:
@@ -126,9 +124,9 @@ def main():
 
                 report_success(CONFIG_FILE_SUCCESSFULLY_DECRYPTED)
 
-    if args.reset:
+    elif args.reset:
         if query_yes_no(WILL_RESET_YOUR_CONFIG_FILE_WARNING, "no"):
             reset_config_file()
 
-    if not (args.config or args.fund or args.version or args.encrypt or args.decrypt or args.reset):
+    else:
         parser.parse_args(["-h"])
