@@ -54,7 +54,7 @@ def write_template_to_config_file():
     # TODO Read the template from a json file.
     _config_info = {
         "userName": "WatIAM username",
-        "password": "WatIAM password",
+        "password": "WatIAM username",
         "ordName": "Name on the credit card",
         "phoneNumber": "Phone number",
         "address1": "Home address 1",
