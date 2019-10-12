@@ -61,6 +61,8 @@ def main():
             try:
                 with open(CONFIG_FILE_PATH) as f:
                     _config = json.load(f)
+            except json.decoder.JSONDecodeError:
+                report_fail(INVALID_CONFIG_FILE)
                 if _config["encrypted"] != "False":
                     report_warning(CONFIG_FILE_HAS_BEEN_ENCRYPTED)
                     f = Fernet(input_and_encrypt_password())
@@ -71,10 +73,9 @@ def main():
                     report_success(ADDING_FUND_SUCCESSFULLY.format(amount, _config["userName"]))
                 else:
                     report_fail(ADDING_FUND_FAILED.format(amount, _config["userName"]))
-            except json.decoder.JSONDecodeError:
-                report_fail(INVALID_CONFIG_FILE)
         else:
             report_error(CAN_NOT_FIND_CONFIG_FILE)
+
     elif args.version:
         from .util import PRINT_PREFIX
 
@@ -144,69 +145,48 @@ def main():
         if _config["encrypted"] == "True":
             report_warning(CONFIG_FILE_HAS_BEEN_ENCRYPTED)
         else:
-            if os.path.isfile(CONFIG_FILE_PATH):
-                with open(CONFIG_FILE_PATH) as f:
-                    _config = json.load(f)
-            else:
-                report_error(CAN_NOT_FIND_CONFIG_FILE)
-
-            errors_found = False
-
             if re.fullmatch('[!@#$%^&*(),.?":{}|<>]', _config["userName"]):
-                report_warning("userName has special characters, please remove them.")
-                errors_found = True
+                report_error("userName has special characters, please remove them.")
 
             if re.fullmatch("([a-zA-Z]+ +)", _config["ordName"]):
-                report_warning("ordName has characters other than letters, please remove them.")
-                errors_found = True
+                report_error("ordName has characters other than letters, please remove them.")
 
             if len(_config["phoneNumber"].replace(" ", "")) != 10:
-                report_warning("phoneNumber has too few or too many characters, please check it.")
-                errors_found = True
+                report_error("phoneNumber has too few or too many characters, please check it.")
 
             if not re.fullmatch(
                 "[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]",
                 _config["ordPostalCode"],
             ):
-                report_warning("ordPostalCode is not a valid postal code, please check it.")
-                errors_found = True
+                report_error("ordPostalCode is not a valid postal code, please check it.")
 
             if not re.fullmatch("([a-zA-Z]+)", _config["ordCity"]):
-                report_warning("ordCity has characters other than letters, please remove them.")
-                errors_found = True
+                report_error("ordCity has characters other than letters, please remove them.")
 
             if not re.fullmatch("([^@]+@[^@]+\\.[^@]+)", _config["ordEmailAddress"]):
-                report_warning("ordEmailAddress is not a valid email address, please check it.")
-                errors_found = True
+                report_error("ordEmailAddress is not a valid email address, please check it.")
 
             if _config["paymentMethod"] != "CC":
-                report_warning("paymentMethod is not CC, please check it.")
-                errors_found = True
+                report_error("paymentMethod is not CC, please check it.")
 
             if re.fullmatch("([a-zA-Z]+ +)", _config["trnCardOwner"]):
-                report_warning("trnCardOwner has characters other than letters, please remove them.")
-                errors_found = True
+                report_error("trnCardOwner has characters other than letters, please remove them.")
 
             if not re.fullmatch("(MC|VI|PV|MD|AM)", _config["trnCardType"]) and len(_config["trnCardType"]) != 2:
-                report_warning("trnCardType is an unsupported card type, please check it.")
-                errors_found = True
+                report_error("trnCardType is an unsupported card type, please check it.")
 
             if len(_config["trnExpMonth"]) != 2:
-                report_warning("trnExpMonth is not valid, please check it.")
-                errors_found = True
+                report_error("trnExpMonth is not valid, please check it.")
 
             if len(_config["trnExpYear"]) != 2:
-                report_warning("trnExpYear is not valid, please check it.")
-                errors_found = True
+                report_error("trnExpYear is not valid, please check it.")
 
             if len(_config["trnCardCvd"]) != 3:
-                report_warning("trnCardCvd is not valid, please check it.")
-                errors_found = True
+                report_error("trnCardCvd is not valid, please check it.")
 
             # TODO add a function to validate credit card number (this needs an algorithm)
 
-            if not errors_found:
-                report_success("The config file is valid.")
+            report_success("The config file is valid.")
 
     else:
         parser.parse_args(["-h"])
