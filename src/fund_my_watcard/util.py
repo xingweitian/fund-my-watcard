@@ -76,3 +76,28 @@ def encrypt_password(password):
         backend=default_backend(),
     )
     return base64.urlsafe_b64encode(kdf.derive(password))
+
+
+def sum_digits(digit):
+    if digit < 10:
+        return digit
+    else:
+        ans = (digit % 10) + (digit // 10)
+        return ans
+
+
+def valid_card_number(number):
+    num = [int(i) for i in number[::-1]]
+    doubled_digit_list = list()
+    digits = list(enumerate(num, start=1))
+
+    for index, digit in digits:
+        if index % 2 == 0:
+            doubled_digit_list.append(digit * 2)
+        else:
+            doubled_digit_list.append(digit)
+
+    doubled_digit_list = [sum_digits(x) for x in doubled_digit_list]
+    sum_of_digits = sum(doubled_digit_list)
+
+    return sum_of_digits % 10 == 0

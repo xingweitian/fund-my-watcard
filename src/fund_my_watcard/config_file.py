@@ -3,10 +3,11 @@ import platform
 import subprocess
 import os
 import json
+import re
 
 from cryptography.fernet import InvalidToken, Fernet
 
-from .util import report_error, report_warning, report_success
+from .util import report_error, report_warning, report_success, valid_card_number
 from .messages import (
     CONFIG_FILE_ALREADY_EXISTS,
     OPENING_CONFIG_FILE,
@@ -48,6 +49,57 @@ def generate_config_file():
 def reset_config_file():
     write_template_to_config_file()
     report_success(RESET_CONFIG_FILE_SUCCESSFULLY)
+
+
+def check_config_file(config):
+    if re.fullmatch(r'[!@#$%^&*(),.?":{}|<>]', config["userName"]):
+        report_error("userName has special characters, please remove them.")
+
+    if re.fullmatch(r"([a-zA-Z]+ )", config["ordName"]):
+        report_error("ordName has characters other than letters, please remove them.")
+
+    if not re.fullmatch(r"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$", config["phoneNumber"]):
+        report_error("phoneNumber isn't formatted correctly, please check it.")
+
+    if not re.fullmatch(
+        r"[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]", config["ordPostalCode"]
+    ):
+        report_error("ordPostalCode is not a valid postal code, please check it.")
+
+    if not re.fullmatch(r"([a-zA-Z]+)", config["ordCity"]):
+        report_error("ordCity has characters other than letters, please remove them.")
+
+    if not re.fullmatch(r"([^@]+@[^@]+\.[^@]+)", config["ordEmailAddress"]):
+        report_error("ordEmailAddress is not a valid email address, please check it.")
+
+    if config["paymentMethod"] != "CC":
+        report_error("paymentMethod is not CC, please check it.")
+
+    if re.fullmatch(r"([a-zA-Z]+ )", config["trnCardOwner"]):
+        report_error("trnCardOwner has characters other than letters, please remove them.")
+
+    if not (
+        config["trnCardType"] == "MC"
+        or config["trnCardType"] == "VI"
+        or config["trnCardType"] == "PV"
+        or config["trnCardType"] == "MD"
+        or config["trnCardType"] == "AM"
+    ):
+        report_error("trnCardType is an unsupported card type, please check it.")
+
+    if not valid_card_number(config["trnCardNumber"].replace(" ", "")):
+        report_error("trnCardNumber is not a valid card number, please check it.")
+
+    if len(config["trnExpMonth"]) != 2:
+        report_error("trnExpMonth is not valid, please check it.")
+
+    if len(config["trnExpYear"]) != 2:
+        report_error("trnExpYear is not valid, please check it.")
+
+    if not re.fullmatch(r"^[0-9]{3,4}$", config["trnCardCvd"]):
+        report_error("trnCardCvd is not valid, please check it.")
+
+    report_success("The config file is valid.")
 
 
 def write_template_to_config_file():
