@@ -1,5 +1,5 @@
 CAN_NOT_FIND_CONFIG_FILE = "Cannot find config file under user directory, try 'watcard --config'."
-CONFIG_FILE_HAS_BEEN_ENCRYPTED = "Config file has been encrypted, needs to be decrypted at first."
+CONFIG_FILE_HAS_BEEN_ENCRYPTED = "Config file has been encrypted, needs to be decrypted first. Try 'watcard -d'."
 ADDING_FUND_SUCCESSFULLY = "Adding ${} to account '{}' successfully."
 ADDING_FUND_FAILED = "Adding ${} to account '{}' failed."
 WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING = "This will encrypt your config file! Do you want to proceed?"

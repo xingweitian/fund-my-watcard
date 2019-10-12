@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import re
 
 from cryptography.fernet import Fernet
 
@@ -132,6 +133,80 @@ def main():
     elif args.reset:
         if query_yes_no(WILL_RESET_YOUR_CONFIG_FILE_WARNING, "no"):
             reset_config_file()
+
+    elif args.valid:
+        if os.path.isfile(CONFIG_FILE_PATH):
+            with open(CONFIG_FILE_PATH) as f:
+                _config = json.load(f)
+        else:
+            report_error(CAN_NOT_FIND_CONFIG_FILE)
+
+        if _config["encrypted"] == "True":
+            report_warning(CONFIG_FILE_HAS_BEEN_ENCRYPTED)
+        else:
+            if os.path.isfile(CONFIG_FILE_PATH):
+                with open(CONFIG_FILE_PATH) as f:
+                    _config = json.load(f)
+            else:
+                report_error(CAN_NOT_FIND_CONFIG_FILE)
+
+            errors_found = False
+
+            if re.fullmatch('[!@#$%^&*(),.?":{}|<>]', _config["userName"]):
+                report_warning("userName has special characters, please remove them.")
+                errors_found = True
+
+            if re.fullmatch("([a-zA-Z]+ +)", _config["ordName"]):
+                report_warning("ordName has characters other than letters, please remove them.")
+                errors_found = True
+
+            if len(_config["phoneNumber"]) != 10:
+                report_warning("phoneNumber has too few or too many characters, please check it.")
+                errors_found = True
+
+            if not re.fullmatch(
+                "[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]",
+                _config["ordPostalCode"],
+            ):
+                report_warning("ordPostalCode is not a valid postal code, please check it.")
+                errors_found = True
+
+            if not re.fullmatch("([a-zA-Z]+)", _config["ordCity"]):
+                report_warning("ordCity has characters other than letters, please remove them.")
+                errors_found = True
+
+            if not re.fullmatch("([^@]+@[^@]+\\.[^@]+)", _config["ordEmailAddress"]):
+                report_warning("ordEmailAddress is not a valid email address, please check it.")
+                errors_found = True
+
+            if _config["paymentMethod"] != "CC":
+                report_warning("paymentMethod is not CC, please check it.")
+                errors_found = True
+
+            if re.fullmatch("([a-zA-Z]+ +)", _config["trnCardOwner"]):
+                report_warning("trnCardOwner has characters other than letters, please remove them.")
+                errors_found = True
+
+            if not re.fullmatch("(MC|VI|PV|MD|AM)", _config["trnCardType"]) and len(_config["trnCardType"]) != 2:
+                report_warning("trnCardType is an unsupported card type, please check it.")
+                errors_found = True
+
+            if len(_config["trnExpMonth"]) != 2:
+                report_warning("trnExpMonth is not valid, please check it.")
+                errors_found = True
+
+            if len(_config["trnExpYear"]) != 2:
+                report_warning("trnExpYear is not valid, please check it.")
+                errors_found = True
+
+            if len(_config["trnCardCvd"]) != 3:
+                report_warning("trnCardCvd is not valid, please check it.")
+                errors_found = True
+
+            # TODO add a function to validate credit card number (this needs an algorithm)
+
+            if not errors_found:
+                report_success("The config file is valid.")
 
     else:
         parser.parse_args(["-h"])
