@@ -160,7 +160,7 @@ def main():
                 report_warning("ordName has characters other than letters, please remove them.")
                 errors_found = True
 
-            if len(_config["phoneNumber"]) != 10:
+            if len(_config["phoneNumber"].replace(" ", "")) != 10:
                 report_warning("phoneNumber has too few or too many characters, please check it.")
                 errors_found = True
 
