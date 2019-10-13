@@ -63,16 +63,16 @@ def main():
                     _config = json.load(f)
             except json.decoder.JSONDecodeError:
                 report_fail(INVALID_CONFIG_FILE)
-                if _config["encrypted"] != "False":
-                    report_warning(CONFIG_FILE_HAS_BEEN_ENCRYPTED)
-                    f = Fernet(input_and_encrypt_password())
-                    decrypt_config_file(_config, f)
-                _my_wat_card = MyWatCard(**_config)
-                res = _my_wat_card.add_fund(amount)
-                if res:
-                    report_success(ADDING_FUND_SUCCESSFULLY.format(amount, _config["userName"]))
-                else:
-                    report_fail(ADDING_FUND_FAILED.format(amount, _config["userName"]))
+            if _config["encrypted"] != "False":
+                report_warning(CONFIG_FILE_HAS_BEEN_ENCRYPTED)
+                f = Fernet(input_and_encrypt_password())
+                decrypt_config_file(_config, f)
+            _my_wat_card = MyWatCard(**_config)
+            res = _my_wat_card.add_fund(amount)
+            if res:
+                report_success(ADDING_FUND_SUCCESSFULLY.format(amount, _config["userName"]))
+            else:
+                report_fail(ADDING_FUND_FAILED.format(amount, _config["userName"]))
         else:
             report_error(CAN_NOT_FIND_CONFIG_FILE)
 
