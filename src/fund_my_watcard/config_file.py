@@ -16,6 +16,7 @@ from .messages import (
     INVALID_PASSWORD,
     DECRYPTING_CONFIG_FILE_FAILED,
 )
+from .mywatcard import card_type
 
 USER_DIR = os.path.expanduser("~")
 CONFIG_FILE_PATH = USER_DIR + "/.watcard_config"
@@ -78,13 +79,7 @@ def check_config_file(config):
     if re.fullmatch(r"([a-zA-Z]+ )", config["trnCardOwner"]):
         report_error("trnCardOwner has characters other than letters, please remove them.")
 
-    if not (
-        config["trnCardType"] == "MC"
-        or config["trnCardType"] == "VI"
-        or config["trnCardType"] == "PV"
-        or config["trnCardType"] == "MD"
-        or config["trnCardType"] == "AM"
-    ):
+    if config["trnCardType"] not in card_type:
         report_error("trnCardType is an unsupported card type, please check it.")
 
     if not valid_card_number(config["trnCardNumber"].replace(" ", "")):
