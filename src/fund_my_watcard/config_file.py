@@ -70,7 +70,7 @@ def check_config_file(config):
     if not re.fullmatch(r"[0-9a-z]+", config["userName"]):
         report_error(USERNAME_ERROR)
 
-    if re.fullmatch(r"[a-zA-Z]+ ", config["ordName"]):
+    if not re.fullmatch(r"[a-zA-Z]+ ", config["ordName"]):
         report_error(ORDNAME_ERROR)
 
     if not re.fullmatch(r"(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}", config["phoneNumber"]):
