@@ -67,13 +67,13 @@ def reset_config_file():
 
 
 def check_config_file(config):
-    if re.fullmatch(r'[!@#$%^&*(),.?":{}|<>]', config["userName"]):
+    if not re.fullmatch(r"[0-9a-z]+", config["userName"]):
         report_error(USERNAME_ERROR)
 
-    if re.fullmatch(r"([a-zA-Z]+ )", config["ordName"]):
+    if re.fullmatch(r"[a-zA-Z]+ ", config["ordName"]):
         report_error(ORDNAME_ERROR)
 
-    if not re.fullmatch(r"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$", config["phoneNumber"]):
+    if not re.fullmatch(r"(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}", config["phoneNumber"]):
         report_error(PHONENUMBER_ERROR)
 
     if not re.fullmatch(
@@ -81,16 +81,16 @@ def check_config_file(config):
     ):
         report_error(POSTALCODE_ERROR)
 
-    if not re.fullmatch(r"([a-zA-Z]+)", config["ordCity"]):
+    if not re.fullmatch(r"[a-zA-Z]+", config["ordCity"]):
         report_error(ORDCITY_ERROR)
 
-    if not re.fullmatch(r"([^@]+@[^@]+\.[^@]+)", config["ordEmailAddress"]):
+    if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", config["ordEmailAddress"]):
         report_error(EMAIL_ERROR)
 
     if config["paymentMethod"] != "CC":
         report_error(PAYMETHOD_ERROR)
 
-    if re.fullmatch(r"([a-zA-Z]+ )", config["trnCardOwner"]):
+    if re.fullmatch(r"[a-zA-Z]+ ", config["trnCardOwner"]):
         report_error(CARDOWNER_ERROR)
 
     if config["trnCardType"] not in card_type:
@@ -99,13 +99,13 @@ def check_config_file(config):
     if not valid_card_number(config["trnCardNumber"].replace(" ", "")):
         report_error(CARDNUMBER_ERROR)
 
-    if not re.fullmatch(r"([a-zA-Z])", config["trnExpMonth"]) and len(config["trnExpMonth"]) != 2:
+    if not re.fullmatch(r"0[1-9]|1[0-2]", config["trnExpMonth"]):
         report_error(EXPMONTH_ERROR)
 
-    if not re.fullmatch(r"([a-zA-Z])", config["trnExpYear"]) and len(config["trnExpYear"]) != 2:
+    if not re.fullmatch(r"[0-9][0-9]", config["trnExpYear"]):
         report_error(EXPYEAR_ERROR)
 
-    if not re.fullmatch(r"^[0-9]{3,4}$", config["trnCardCvd"]):
+    if not re.fullmatch(r"[0-9]{3,4}", config["trnCardCvd"]):
         report_error(CVD_ERROR)
 
     report_success(VALID_CONFIG_FILE)

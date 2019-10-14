@@ -17,7 +17,7 @@ DECRYPTING_CONFIG_FILE_FAILED = "Decrypting config file failed."
 INVALID_PASSWORD = "Invalid password."
 INVALID_CONFIG_FILE = "Invalid config file. Try 'watcard --valid' to check if your config file is valid."
 VALID_CONFIG_FILE = (
-    "The config file is valid. If you're still getting an error, try doing 'watcard -r' to reset your " "config file."
+    "The config file is valid. If you're still getting an error, try doing 'watcard -r' to reset your config file."
 )
 USERNAME_ERROR = "userName has special characters, please remove them."
 ORDNAME_ERROR = "ordName has characters other than letters, please remove them."
