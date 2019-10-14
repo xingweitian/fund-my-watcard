@@ -24,3 +24,44 @@ def test_ord_name():
 def test_postal_code():
     _config = {"userName": "username", "ordName": "ord Name", "ordPostalCode": "D1L D2L"}
     assert_report_error(_config)
+
+
+def test_phone_number():
+    _config = {"userName": "username", "ordName": "ord Name", "ordPostalCode": "D1L D2L", "phoneNumber": "90512312345"}
+    assert_report_error(_config)
+
+
+def test_ord_city():
+    _config = {
+        "userName": "username",
+        "ordName": "ord Name",
+        "ordPostalCode": "D1L D2L",
+        "phoneNumber": "9051231234",
+        "ordCity": "Wat3rl00",
+    }
+    assert_report_error(_config)
+
+
+def test_email_address():
+    _config = {
+        "userName": "username",
+        "ordName": "ord Name",
+        "ordPostalCode": "D1L D2L",
+        "phoneNumber": "9051231234",
+        "ordCity": "Waterloo",
+        "ordEmailAddress": "abc123gmail.com",
+    }
+    assert_report_error(_config)
+
+
+def test_pay_method():
+    _config = {
+        "userName": "username",
+        "ordName": "ord Name",
+        "ordPostalCode": "D1L D2L",
+        "phoneNumber": "9051231234",
+        "ordCity": "Waterloo",
+        "ordEmailAddress": "abc123@gmail.com",
+        "paymentMethod": "CCC",
+    }
+    assert_report_error(_config)
