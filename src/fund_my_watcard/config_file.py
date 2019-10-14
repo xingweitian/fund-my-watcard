@@ -90,7 +90,7 @@ def check_config_file(config):
     if config["paymentMethod"] != "CC":
         report_error(PAYMETHOD_ERROR)
 
-    if re.fullmatch(r"[a-zA-Z]+ ", config["trnCardOwner"]):
+    if not re.fullmatch(r"[a-zA-Z]+ ", config["trnCardOwner"]):
         report_error(CARDOWNER_ERROR)
 
     if config["trnCardType"] not in card_type:
