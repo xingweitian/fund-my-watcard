@@ -38,7 +38,7 @@ An example of **.watcard_config**:
 ```json
 {
   "userName": "WatIAM username",
-  "password": "WatIAM username",
+  "password": "WatIAM password",
   "ordName": "Name on the credit card",
   "phoneNumber": "Phone number",
   "address1": "Home address 1",
