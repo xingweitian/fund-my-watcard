@@ -1,9 +1,25 @@
 import base64
 import getpass
 import logging
+import re
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from .messages import (
+    USERNAME_ERROR,
+    ORDNAME_ERROR,
+    PHONENUMBER_ERROR,
+    POSTALCODE_ERROR,
+    ORDCITY_ERROR,
+    EMAIL_ERROR,
+    PAYMETHOD_ERROR,
+    CARDOWNER_ERROR,
+    CARDTYPE_ERROR,
+    CARDNUMBER_ERROR,
+    EXPMONTH_ERROR,
+    EXPYEAR_ERROR,
+    CVD_ERROR,
+)
 
 logger = logging.getLogger("logger")
 
@@ -101,3 +117,70 @@ def valid_card_number(number):
     sum_of_digits = sum(doubled_digit_list)
 
     return sum_of_digits % 10 == 0
+
+
+def check_user_name(user_name):
+    if not re.fullmatch(r"[0-9a-z]+", user_name):
+        report_error(USERNAME_ERROR)
+
+
+def check_ord_name(ord_name):
+    if not re.fullmatch(r"[a-zA-Z]+ ", ord_name):
+        report_error(ORDNAME_ERROR)
+
+
+def check_phone_number(phone_number):
+    if not re.fullmatch(r"(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}", phone_number):
+        report_error(PHONENUMBER_ERROR)
+
+
+def check_ord_postal_code(ord_postal_code):
+    if not re.fullmatch(r"^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$", ord_postal_code):
+        report_error(POSTALCODE_ERROR)
+
+
+def check_ord_city(ord_city):
+    if not re.fullmatch(r"[a-zA-Z]+", ord_city):
+        report_error(ORDCITY_ERROR)
+
+
+def check_email_address(email_address):
+    if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email_address):
+        report_error(EMAIL_ERROR)
+
+
+def check_payment_method(payment_method):
+    if payment_method != "CC":
+        report_error(PAYMETHOD_ERROR)
+
+
+def check_trn_card_owner(trn_card_owner):
+    if not re.fullmatch(r"[a-zA-Z]+ ", trn_card_owner):
+        report_error(CARDOWNER_ERROR)
+
+
+def check_trn_card_type(trn_card_type):
+    from .mywatcard import card_type
+
+    if trn_card_type not in card_type:
+        report_error(CARDTYPE_ERROR)
+
+
+def check_trn_card_number(trn_card_number):
+    if not valid_card_number(trn_card_number.replace(" ", "")):
+        report_error(CARDNUMBER_ERROR)
+
+
+def check_trn_exp_month(trn_exp_month):
+    if not re.fullmatch(r"0[1-9]|1[0-2]", trn_exp_month):
+        report_error(EXPMONTH_ERROR)
+
+
+def check_trn_exp_year(trn_exp_year):
+    if not re.fullmatch(r"[0-9][0-9]", trn_exp_year):
+        report_error(EXPYEAR_ERROR)
+
+
+def check_trn_card_cvd(trn_card_cvd):
+    if not re.fullmatch(r"[0-9]{3,4}", trn_card_cvd):
+        report_error(CVD_ERROR)

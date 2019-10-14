@@ -3,11 +3,27 @@ import platform
 import subprocess
 import os
 import json
-import re
 
 from cryptography.fernet import InvalidToken, Fernet
 
-from .util import report_error, report_warning, report_success, valid_card_number
+from .util import (
+    report_error,
+    report_warning,
+    report_success,
+    check_trn_card_cvd,
+    check_trn_exp_year,
+    check_trn_exp_month,
+    check_trn_card_number,
+    check_trn_card_type,
+    check_trn_card_owner,
+    check_payment_method,
+    check_email_address,
+    check_ord_city,
+    check_ord_postal_code,
+    check_phone_number,
+    check_ord_name,
+    check_user_name,
+)
 from .messages import (
     CONFIG_FILE_ALREADY_EXISTS,
     OPENING_CONFIG_FILE,
@@ -16,21 +32,7 @@ from .messages import (
     INVALID_PASSWORD,
     DECRYPTING_CONFIG_FILE_FAILED,
     VALID_CONFIG_FILE,
-    USERNAME_ERROR,
-    ORDNAME_ERROR,
-    PHONENUMBER_ERROR,
-    POSTALCODE_ERROR,
-    ORDCITY_ERROR,
-    EMAIL_ERROR,
-    PAYMETHOD_ERROR,
-    CARDOWNER_ERROR,
-    CARDTYPE_ERROR,
-    CARDNUMBER_ERROR,
-    EXPMONTH_ERROR,
-    EXPYEAR_ERROR,
-    CVD_ERROR,
 )
-from .mywatcard import card_type
 
 USER_DIR = os.path.expanduser("~")
 CONFIG_FILE_PATH = USER_DIR + "/.watcard_config"
@@ -67,47 +69,19 @@ def reset_config_file():
 
 
 def check_config_file(config):
-    if not re.fullmatch(r"[0-9a-z]+", config["userName"]):
-        report_error(USERNAME_ERROR)
-
-    if not re.fullmatch(r"[a-zA-Z]+ ", config["ordName"]):
-        report_error(ORDNAME_ERROR)
-
-    if not re.fullmatch(r"(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}", config["phoneNumber"]):
-        report_error(PHONENUMBER_ERROR)
-
-    if not re.fullmatch(
-        r"[ABCEGHJKLMNPRSTVXY][0-9][ABCEGHJKLMNPRSTVWXYZ] ?[0-9][ABCEGHJKLMNPRSTVWXYZ][0-9]", config["ordPostalCode"]
-    ):
-        report_error(POSTALCODE_ERROR)
-
-    if not re.fullmatch(r"[a-zA-Z]+", config["ordCity"]):
-        report_error(ORDCITY_ERROR)
-
-    if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", config["ordEmailAddress"]):
-        report_error(EMAIL_ERROR)
-
-    if config["paymentMethod"] != "CC":
-        report_error(PAYMETHOD_ERROR)
-
-    if not re.fullmatch(r"[a-zA-Z]+ ", config["trnCardOwner"]):
-        report_error(CARDOWNER_ERROR)
-
-    if config["trnCardType"] not in card_type:
-        report_error(CARDTYPE_ERROR)
-
-    if not valid_card_number(config["trnCardNumber"].replace(" ", "")):
-        report_error(CARDNUMBER_ERROR)
-
-    if not re.fullmatch(r"0[1-9]|1[0-2]", config["trnExpMonth"]):
-        report_error(EXPMONTH_ERROR)
-
-    if not re.fullmatch(r"[0-9][0-9]", config["trnExpYear"]):
-        report_error(EXPYEAR_ERROR)
-
-    if not re.fullmatch(r"[0-9]{3,4}", config["trnCardCvd"]):
-        report_error(CVD_ERROR)
-
+    check_user_name(config["userName"])
+    check_ord_name(config["ordName"])
+    check_phone_number(config["phoneNumber"])
+    check_ord_postal_code(config["ordPostalCode"])
+    check_ord_city(config["ordCity"])
+    check_email_address(config["ordEmailAddress"])
+    check_payment_method(config["paymentMethod"])
+    check_trn_card_owner(config["trnCardOwner"])
+    check_trn_card_type(config["trnCardType"])
+    check_trn_card_number(config["trnCardNumber"])
+    check_trn_exp_month(config["trnExpMonth"])
+    check_trn_exp_year(config["trnExpYear"])
+    check_trn_card_cvd(config["trnCardCvd"])
     report_success(VALID_CONFIG_FILE)
 
 
