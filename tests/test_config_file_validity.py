@@ -1,5 +1,4 @@
-import pytest
-
+from .util import assert_report_error
 from src.fund_my_watcard.util import (
     check_user_name,
     check_ord_name,
@@ -15,14 +14,6 @@ from src.fund_my_watcard.util import (
     check_trn_exp_year,
     check_trn_card_cvd,
 )
-
-
-@pytest.mark.skip(reason="util function, no need to test")
-def assert_report_error(checker_func, config):
-    with pytest.raises(SystemExit) as e:
-        checker_func(config)
-    assert e.type == SystemExit
-    assert e.value.code == 1
 
 
 def test_user_name():
