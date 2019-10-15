@@ -16,7 +16,7 @@ pip3 install fund-my-watcard
 
 ```
 teachertian@v1040-wn-rt-c-83-249 ~/PycharmProjects/fundmywatcard: watcard
-usage: watcard [-h] [-c | -f FUND | -v | -e | -d | -r]
+usage: watcard [-h] [-c | -f FUND | -v | -e | -d | -r | -va | -t]
 
 Fund my WatCard: A tool that add funds to your WatCard easily.
 
@@ -28,6 +28,7 @@ optional arguments:
   -e, --encrypt         encrypt the config file with user defined password
   -d, --decrypt         decrypt the config file so you can edit it
   -r, --reset           reset the config file
+  -va, --valid          check the config files for errors
   -t, --transactions    review the previous transactions
 ```
 
