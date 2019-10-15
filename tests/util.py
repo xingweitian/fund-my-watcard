@@ -1,6 +1,6 @@
-import pytest
-
 from subprocess import PIPE, run
+
+import pytest
 
 
 def out(command):

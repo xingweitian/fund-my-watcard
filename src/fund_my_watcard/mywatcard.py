@@ -1,8 +1,8 @@
 import time
 
+from selenium import webdriver
 from splinter import Browser
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium import webdriver
 
 from .util import report_fail
 

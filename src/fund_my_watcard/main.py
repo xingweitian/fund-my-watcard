@@ -4,33 +4,33 @@ import os
 
 from cryptography.fernet import Fernet
 
-from .version import VERSION
-from .util import report_error, report_success, report_warning, report_fail, query_yes_no, input_and_encrypt_password
-from .mywatcard import MyWatCard
 from .config_file import (
     CONFIG_FILE_PATH,
-    generate_config_file,
-    reset_config_file,
     check_config_file,
     decrypt_config_file,
     encrypt_config_file,
+    generate_config_file,
+    reset_config_file,
 )
+from .log import init_logger
 from .messages import (
-    CAN_NOT_FIND_CONFIG_FILE,
-    CONFIG_FILE_HAS_BEEN_ENCRYPTED,
     ADDING_FUND_FAILED,
     ADDING_FUND_SUCCESSFULLY,
-    WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING,
-    WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING,
-    WILL_RESET_YOUR_CONFIG_FILE_WARNING,
-    IS_ALREADY_DECRYPTED,
-    IS_ALREADY_ENCRYPTED,
+    CAN_NOT_FIND_CONFIG_FILE,
+    CONFIG_FILE_HAS_BEEN_ENCRYPTED,
     CONFIG_FILE_SUCCESSFULLY_DECRYPTED,
     CONFIG_FILE_SUCCESSFULLY_ENCRYPTED,
     INVALID_CONFIG_FILE,
+    IS_ALREADY_DECRYPTED,
+    IS_ALREADY_ENCRYPTED,
+    WILL_DECRYPT_YOUR_CONFIG_FILE_WARNING,
+    WILL_ENCRYPT_YOUR_CONFIG_FILE_WARNING,
+    WILL_RESET_YOUR_CONFIG_FILE_WARNING,
 )
-from .log import init_logger
+from .mywatcard import MyWatCard
 from .transaction import print_transactions
+from .util import input_and_encrypt_password, query_yes_no, report_error, report_fail, report_success, report_warning
+from .version import VERSION
 
 
 def main():

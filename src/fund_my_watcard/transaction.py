@@ -1,5 +1,6 @@
-import prettytable
 import re
+
+import prettytable
 
 
 def print_transactions(logfile):

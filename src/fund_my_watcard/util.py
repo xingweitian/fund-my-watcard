@@ -2,23 +2,25 @@ import base64
 import getpass
 import logging
 import re
+
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
 from .messages import (
-    USERNAME_ERROR,
-    ORDNAME_ERROR,
-    PHONENUMBER_ERROR,
-    POSTALCODE_ERROR,
-    ORDCITY_ERROR,
-    EMAIL_ERROR,
-    PAYMETHOD_ERROR,
+    CARDNUMBER_ERROR,
     CARDOWNER_ERROR,
     CARDTYPE_ERROR,
-    CARDNUMBER_ERROR,
+    CVD_ERROR,
+    EMAIL_ERROR,
     EXPMONTH_ERROR,
     EXPYEAR_ERROR,
-    CVD_ERROR,
+    ORDCITY_ERROR,
+    ORDNAME_ERROR,
+    PAYMETHOD_ERROR,
+    PHONENUMBER_ERROR,
+    POSTALCODE_ERROR,
+    USERNAME_ERROR,
 )
 
 logger = logging.getLogger("logger")

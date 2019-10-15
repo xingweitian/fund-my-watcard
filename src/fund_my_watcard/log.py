@@ -1,5 +1,7 @@
 import logging
+
 import colorlog
+
 from .config_file import USER_DIR
 from .util import PRINT_PREFIX
 

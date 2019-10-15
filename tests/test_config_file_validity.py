@@ -1,19 +1,20 @@
-from .util import assert_report_error
 from src.fund_my_watcard.util import (
-    check_user_name,
-    check_ord_name,
-    check_phone_number,
-    check_ord_postal_code,
-    check_ord_city,
     check_email_address,
+    check_ord_city,
+    check_ord_name,
+    check_ord_postal_code,
     check_payment_method,
+    check_phone_number,
+    check_trn_card_cvd,
+    check_trn_card_number,
     check_trn_card_owner,
     check_trn_card_type,
-    check_trn_card_number,
     check_trn_exp_month,
     check_trn_exp_year,
-    check_trn_card_cvd,
+    check_user_name,
 )
+
+from .util import assert_report_error
 
 
 def test_user_name():
