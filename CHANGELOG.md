@@ -2,7 +2,7 @@
 > release on 2019-10-31
 
 New features:
-1. Check the validity of config file.
+1. Add an argument `--valid` to check the validity of the config file.
 
 ### Version 0.4.1
 > release on 2019-09-19
