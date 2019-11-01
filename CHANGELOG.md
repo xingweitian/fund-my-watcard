@@ -1,5 +1,8 @@
 ### Version 0.5.0
-> will release on 2019-10-30
+> release on 2019-10-31
+
+New features:
+1. Add an argument `--valid` to check the validity of the config file.
 
 ### Version 0.4.1
 > release on 2019-09-19

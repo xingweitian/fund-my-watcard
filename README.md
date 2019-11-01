@@ -9,7 +9,7 @@ This tool helps you add funds to your WatCard easily. I wrote this tool because 
 ## Installation
 
 ```bash
-pip3 install fund-my-watcard
+pip3 install --upgrade fund-my-watcard
 ```
 
 ## Usage
