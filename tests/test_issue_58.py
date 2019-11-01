@@ -7,5 +7,5 @@ def test_ord_name():
 
 
 def test_trn_card_owner():
-    _config = {"trnCardOwner": "3an Zhang"}
+    _config = {"trnCardOwner": "San Zhang"}
     assert check_trn_card_owner(_config["trnCardOwner"]) is None
