@@ -1,3 +1,8 @@
+### Version 0.5.1
+> release on 2019-10-31
+
+Fix bug: issue 58
+
 ### Version 0.5.0
 > release on 2019-10-31
 
