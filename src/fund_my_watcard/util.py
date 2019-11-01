@@ -127,7 +127,7 @@ def check_user_name(user_name):
 
 
 def check_ord_name(ord_name):
-    if not re.fullmatch(r"[a-zA-Z]+ ", ord_name):
+    if not re.fullmatch(r"[a-zA-Z\s]+", ord_name):
         report_error(ORDNAME_ERROR)
 
 
@@ -157,7 +157,7 @@ def check_payment_method(payment_method):
 
 
 def check_trn_card_owner(trn_card_owner):
-    if not re.fullmatch(r"[a-zA-Z]+ ", trn_card_owner):
+    if not re.fullmatch(r"[a-zA-Z\s]+", trn_card_owner):
         report_error(CARDOWNER_ERROR)
 
 
