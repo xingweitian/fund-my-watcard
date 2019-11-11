@@ -1,0 +1,21 @@
+# file: $PROJ/.flake8
+#
+# This config expects that the flake8-bugbear extension to be installed.
+# bugbear looks at the line length and allows a slight variance as opposed
+# to a hard limit.  When it detects excessive line lengths, it returns B950.
+# This config looks for B950 and ignores the default flake8 E501 line length error.
+
+[flake8]
+max-complexity = 10
+max-line-length = 120
+select = C,E,F,W,B,B950
+ignore =
+       # Use bugbear line length detection instead of default
+       E501,
+       # PEP8 allows hanging indent, but E126 doesn't seem to.
+       E126,
+       # Do not check the complexity for now.
+       C901,
+# Local Variables:
+# mode: conf
+# End:
