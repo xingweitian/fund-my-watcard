@@ -1,4 +1,4 @@
 -r requirements.txt
 
 pytest==5.4.2
-flake8==3.8.1
+flake8==3.8.2
