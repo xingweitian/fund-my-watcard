@@ -1,5 +1,5 @@
 splinter==0.13.0
-webdriver-manager==2.3.0
+webdriver-manager==2.5.3
 cryptography==2.9.2
 prettytable==0.7.2
 colorlog==4.1.0
