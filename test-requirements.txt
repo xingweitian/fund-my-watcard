@@ -1,4 +1,4 @@
 -r requirements.txt
 
-pytest==5.4.3
+pytest==6.0.0
 flake8==3.8.3
