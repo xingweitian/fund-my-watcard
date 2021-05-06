@@ -1,0 +1,23 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "11:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: webdriver-manager
+    versions:
+    - ">= 3.a, < 4"
+  - dependency-name: prettytable
+    versions:
+    - 2.0.0
+    - 2.1.0
+  - dependency-name: cryptography
+    versions:
+    - 3.3.1
+    - 3.4.1
+  - dependency-name: pytest
+    versions:
+    - 6.2.2
