@@ -38,4 +38,3 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
 )
-print("thank me later")
